@@ -6,7 +6,7 @@ reviewed: 2026-09-07
 tags: [Authentication, Tokens, OAuth]
 sources:
   - { type: rfc, name: "RFC 6749 §1.5 — The OAuth 2.0 Authorization Framework: Refresh Token", url: "https://www.rfc-editor.org/rfc/rfc6749#section-1.5" }
-  - { type: standard, name: "OAuth 2.0 Security Best Current Practice (IETF Internet-Draft)", url: "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics" }
+  - { type: rfc, name: "RFC 9700 — Best Current Practice for OAuth 2.0 Security (BCP 240)", url: "https://www.rfc-editor.org/rfc/rfc9700" }
   - { type: vendor, name: "Auth0 Docs — Refresh Token Rotation", url: "https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation" }
 ---
 
@@ -132,11 +132,13 @@ shipping it.
 
 - **Rotate on every use**: issue a new refresh token every time one is
   redeemed and invalidate the one just used, rather than allowing the same
-  refresh token to be exchanged repeatedly — the OAuth 2.0 Security Best
-  Current Practice document (still an IETF Internet-Draft,
-  `draft-ietf-oauth-security-topics`, not yet a published RFC) recommends
-  rotation specifically to limit the window in which a stolen token
-  remains useful.
+  refresh token to be exchanged repeatedly. [RFC 9700](https://www.rfc-editor.org/rfc/rfc9700)
+  §4.14 (Best Current Practice for OAuth 2.0 Security, BCP 240) describes
+  refresh token rotation as issuing "a new refresh token with every access
+  token refresh response," while the "previous refresh token is
+  invalidated, but information about the relationship is retained by the
+  authorization server" — exactly the family-tracking behavior this page
+  documents.
 - **Detect and act on reuse**: track refresh tokens as members of a
   family (all descendants of one original login). If a token that has
   already been marked used is presented again, treat it as evidence of
@@ -159,10 +161,13 @@ If a refresh token stays valid across multiple redemptions instead of
 being retired on first use, a token captured once — through a log leak, a
 network intercept, or a compromised device — grants an attacker ongoing
 parallel access alongside the legitimate user, with no signal to either
-party that anything is wrong. The OAuth 2.0 Security Best Current Practice
-recommends rotation with reuse detection precisely to close this gap.
-Rotate on every use and revoke the entire family the instant a used token
-is replayed, exactly as the flow diagram above shows.
+party that anything is wrong. RFC 9700 §4.14 describes rotation precisely
+to close this gap: "If a refresh token is compromised and subsequently
+used by both the attacker and the legitimate client, one of them will
+present an invalidated refresh token, which will inform the authorization
+server of the breach." Rotate on every use and revoke the entire family
+the instant a used token is replayed, exactly as the flow diagram above
+shows.
 
 ### Treating a rotated refresh token family as permanent
 
@@ -194,8 +199,7 @@ allows it.
   confidential client secret — issuing a new refresh token on every
   exchange and automatically revoking the family when a rotated-out token
   is reused — the same family-revocation behavior the flow diagram on this
-  page
-  documents.
+  page documents.
 
 ## References
 
@@ -203,7 +207,7 @@ allows it.
 | Type | Source |
 | --- | --- |
 | RFC | [RFC 6749 §1.5 — The OAuth 2.0 Authorization Framework: Refresh Token](https://www.rfc-editor.org/rfc/rfc6749#section-1.5) |
-| Standard | [OAuth 2.0 Security Best Current Practice (IETF Internet-Draft)](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics) |
+| RFC | [RFC 9700 — Best Current Practice for OAuth 2.0 Security (BCP 240)](https://www.rfc-editor.org/rfc/rfc9700) |
 | Vendor | [Auth0 Docs — Refresh Token Rotation](https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation) |
 <!-- generated:references end -->
 

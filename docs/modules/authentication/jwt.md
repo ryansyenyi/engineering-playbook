@@ -6,7 +6,7 @@ reviewed: 2026-09-07
 tags: [Authentication, JWT, Tokens]
 sources:
   - { type: rfc, name: "RFC 7519 — JSON Web Token (JWT)", url: "https://www.rfc-editor.org/rfc/rfc7519" }
-  - { type: standard, name: "OWASP JSON Web Token Cheat Sheet", url: "https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html" }
+  - { type: standard, name: "OWASP JSON Web Token Cheat Sheet", url: "https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html" }
   - { type: rfc, name: "RFC 8725 — JSON Web Token Best Current Practices", url: "https://www.rfc-editor.org/rfc/rfc8725" }
   - { type: vendor, name: "GitHub Docs — Managing your personal access tokens", url: "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" }
 ---
@@ -34,7 +34,9 @@ where the verifying party (a resource server, a microservice) should not
 need a network round trip to a central session store on every request, and
 where the token's lifetime can be kept short. This is the access-token
 half of the [OAuth 2.0](oauth2.md) and [OIDC](oidc.md) flows on this
-module's other pages.
+module's other pages, and the stateless side of the token-model choice the
+[module overview](index.md#alternatives) frames as JWT vs. session
+cookies.
 
 ### When not to use
 
@@ -199,7 +201,7 @@ payload genuinely must be confidential from the bearer.
 | Type | Source |
 | --- | --- |
 | RFC | [RFC 7519 — JSON Web Token (JWT)](https://www.rfc-editor.org/rfc/rfc7519) |
-| Standard | [OWASP JSON Web Token Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_for_Java_Cheat_Sheet.html) |
+| Standard | [OWASP JSON Web Token Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/JSON_Web_Token_Cheat_Sheet.html) |
 | RFC | [RFC 8725 — JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725) |
 | Vendor | [GitHub Docs — Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) |
 <!-- generated:references end -->

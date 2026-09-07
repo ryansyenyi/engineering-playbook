@@ -32,8 +32,8 @@ Use OAuth 2.0 when a client — a web app, a mobile app, a CLI, a
 server-to-server integration — needs scoped access to a resource hosted by
 a separate authorization server, and you want to avoid that client ever
 holding the resource owner's password. This is the mechanism underneath
-"Connect your Google Drive" or "Authorize this CLI against our API"
-integrations.
+*Connect your Google Drive* or *Authorize this CLI against our API*
+style integrations.
 
 ### When not to use
 
@@ -132,12 +132,15 @@ shipping it.
   the verifier with a cryptographically random value and derive the
   challenge with `S256`, not `plain`.
 - **Validate `redirect_uri` with an exact string match**, not a prefix or
-  pattern match, against a pre-registered allowlist — RFC 6749 §10.6
-  requires the authorization server to ensure the redirection URI used to
-  obtain the code "is identical to the redirection URI provided when
-  exchanging the authorization code for an access token," and to
-  "validate it against the registered value." A loose match is the most
-  common OAuth misconfiguration.
+  pattern match, against a pre-registered allowlist. RFC 6749 §3.1.2.3
+  requires that "the authorization server MUST compare and match the
+  value received against at least one of the registered redirection
+  URIs," and that where "the client registration included the full
+  redirection URI, the authorization server MUST compare the two URIs
+  using simple string comparison." Separately, §4.1.3 requires that when
+  `redirect_uri` is present at both the authorization and token requests,
+  "their values MUST be identical." A loose match is the most common
+  OAuth misconfiguration.
 - **Always send and verify `state`**: RFC 6749 §4.1.1 defines it as "an
   opaque value used by the client to maintain state between the request
   and callback," and in practice it is the CSRF defense for the redirect

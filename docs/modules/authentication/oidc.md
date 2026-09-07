@@ -17,7 +17,9 @@ sources:
 ### Purpose
 
 OpenID Connect (OIDC) is an identity layer built on top of
-[OAuth 2.0](oauth2.md). OpenID Connect Core 1.0's Abstract describes it as
+[OAuth 2.0](oauth2.md), one of the ten mechanisms the
+[module overview](index.md#purpose) lists for establishing a verified
+identity. OpenID Connect Core 1.0's Abstract describes it as
 enabling clients "to verify the identity of the End-User based on the
 authentication performed by an Authorization Server, as well as to obtain
 basic profile information about the End-User." It reuses OAuth 2.0's
