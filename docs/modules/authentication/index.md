@@ -8,6 +8,11 @@ sources:
   - { type: standard, name: "OWASP Authentication Cheat Sheet", url: "https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html" }
   - { type: rfc, name: "RFC 6749 — OAuth 2.0", url: "https://www.rfc-editor.org/rfc/rfc6749" }
   - { type: rfc, name: "RFC 9106 — Argon2", url: "https://www.rfc-editor.org/rfc/rfc9106" }
+  - { type: vendor, name: "GitHub Docs — Managing your personal access tokens", url: "https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens" }
+  - { type: vendor, name: "GitHub Docs — Authorizing OAuth Apps (device flow)", url: "https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps" }
+  - { type: vendor, name: "Google Account Help — Sign in with a passkey instead of a password", url: "https://support.google.com/accounts/answer/13548313" }
+  - { type: vendor, name: "Google Account Help — Suspicious sign-in prevented", url: "https://support.google.com/accounts/answer/6063333" }
+  - { type: vendor, name: "Microsoft Learn — Microsoft Entra Conditional Access overview", url: "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview" }
 ---
 
 # Authentication
@@ -253,22 +258,27 @@ Before shipping any authentication surface, run it against the
 
 ## Real-world implementations
 
-- **GitHub** issues personal access tokens as a bearer-credential
-  alternative to session cookies for API and `git` access, and uses an
-  out-of-band device verification flow — entering a code shown by a CLI or
-  TV app into a browser session — for clients that cannot host an OAuth
-  redirect, the same pattern this module's [OAuth 2.0](oauth2.md) page
-  covers.
-- **Google** layers risk-based signals — new device, new location,
-  improbable travel — on top of password verification before deciding
-  whether to challenge with additional factors, and has pushed passkeys
-  toward being the default credential ahead of passwords, the direction
-  the [passkeys](passkeys.md) page describes.
-- **Microsoft Entra** evaluates conditional access policies — device
-  compliance, network location, sign-in risk — after primary authentication
-  and before a token is issued, which is the enterprise extension of the
-  [enterprise SSO](enterprise-sso.md) and [OIDC](oidc.md) flows this module
-  documents.
+- **GitHub** documents [personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+  as "an alternative to using passwords for authentication ... when using
+  the GitHub API or the command line," and uses a
+  [device flow](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps) —
+  entering a code shown by a CLI into a browser session at
+  `github.com/login/device` — for OAuth apps that cannot host a redirect,
+  the same pattern this module's [OAuth 2.0](oauth2.md) page covers.
+- **Google** has made [passkeys the default, password-less sign-in
+  option](https://support.google.com/accounts/answer/13548313) for
+  personal accounts, the direction the [passkeys](passkeys.md) page
+  describes, and separately
+  [blocks or flags sign-in attempts](https://support.google.com/accounts/answer/6063333)
+  it does not recognize — for example a sign-in "from a different location
+  or device than normal" — rather than relying on password verification
+  alone.
+- **Microsoft Entra** [Conditional Access](https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview)
+  policies are "enforced after first-factor authentication is completed"
+  and combine signals — device state, IP location, and real-time sign-in
+  risk — to decide whether to grant, block, or step up access, which is
+  the enterprise extension of the [enterprise SSO](enterprise-sso.md) and
+  [OIDC](oidc.md) flows this module documents.
 
 ## References
 
@@ -278,6 +288,11 @@ Before shipping any authentication surface, run it against the
 | Standard | [OWASP Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html) |
 | RFC | [RFC 6749 — OAuth 2.0](https://www.rfc-editor.org/rfc/rfc6749) |
 | RFC | [RFC 9106 — Argon2](https://www.rfc-editor.org/rfc/rfc9106) |
+| Vendor | [GitHub Docs — Managing your personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) |
+| Vendor | [GitHub Docs — Authorizing OAuth Apps (device flow)](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps) |
+| Vendor | [Google Account Help — Sign in with a passkey instead of a password](https://support.google.com/accounts/answer/13548313) |
+| Vendor | [Google Account Help — Suspicious sign-in prevented](https://support.google.com/accounts/answer/6063333) |
+| Vendor | [Microsoft Learn — Microsoft Entra Conditional Access overview](https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview) |
 <!-- generated:references end -->
 
 <!-- generated:page-footer start -->
