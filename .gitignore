@@ -3,3 +3,9 @@ site/
 __pycache__/
 *.pyc
 .cache/
+.pytest_cache/
+
+# Build-time generated pages (see spec: git-derived content is never committed)
+docs/recently-updated.md
+docs/changelog.md
+docs/research-queue.md

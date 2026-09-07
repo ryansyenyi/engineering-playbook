@@ -1,0 +1,46 @@
+[project]
+site_name        = "Engineering Playbook"
+site_description = "Living architecture playbook: patterns, standards, decisions, checklists."
+docs_dir         = "docs"
+site_dir         = "site"
+
+[project.theme]
+variant = "modern"
+features = [
+  "navigation.instant",
+  "navigation.instant.prefetch",
+  "navigation.instant.progress",
+  "navigation.sections",
+  "navigation.top",
+  "toc.follow",
+  "search.highlight",
+  "search.suggest",
+  "content.code.copy",
+  "content.action.edit",
+]
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle = { icon = "lucide/sun", name = "Switch to dark mode" }
+
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle = { icon = "lucide/moon", name = "Switch to light mode" }
+
+[project.plugins.search]
+[project.plugins.tags]
+[project.plugins.table-reader]
+[project.plugins.section-index]
+
+[project.validation]
+invalid_links = true
+invalid_link_anchors = true
+
+[project.markdown_extensions]
+attr_list = {}
+md_in_html = {}
+pymdownx.superfences.custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
+]
