@@ -153,3 +153,17 @@ md_in_html = {}
 pymdownx.superfences.custom_fences = [
   { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
 ]
+
+# Instant previews: hovering a link to a principle, module page, security page
+# or decision matrix shows that page's opening content without navigating.
+# The design makes principles individual pages specifically so they can be
+# previewed this way, so the extension has to be enabled for that to hold.
+[[project.markdown_extensions.zensical.extensions.preview.configurations]]
+targets.include = [
+  "principles/*",
+  "modules/*",
+  "security/*",
+  "matrices/*",
+  "decisions/*",
+  "checklists/*",
+]
