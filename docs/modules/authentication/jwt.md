@@ -18,7 +18,7 @@ sources:
 ### Purpose
 
 A JSON Web Token (JWT) is, per
-[RFC 7519](https://www.rfc-editor.org/rfc/rfc7519), "a compact,
+[RFC 7519](https://www.rfc-editor.org/rfc/rfc7519)'s Abstract, "a compact,
 URL-safe means of representing claims to be transferred between two
 parties." A JWT is a signed (and optionally encrypted) set of claims — who
 issued it, who it is for, when it expires, and any application-specific
@@ -53,8 +53,8 @@ module's other pages.
   updates) and those changes must apply before the token's natural
   expiry. A JWT's claims are frozen at issuance; use a
   [session cookie](session-cookies.md) backed by server-side state
-  instead, which the matrix notes needs "a shared session store" but
-  reflects changes immediately.
+  instead — the matrix rates it as "needs shared session store," but that
+  state is exactly what lets it reflect changes immediately.
 
 ## How it works
 
@@ -177,19 +177,21 @@ algorithm and reject anything else.
 
 A JWT's payload is base64url-encoded, not encrypted — anyone holding the
 token, including a client-side script or a logging pipeline that captures
-request headers, can read every claim. RFC 7519 defines the payload as a
-"claims set," not a container for secrets. Keep sensitive data (raw
-passwords, full PII beyond what the resource server strictly needs) out of
-the claims, and use JWE if the payload genuinely must be confidential from
-the bearer.
+request headers, can read every claim. RFC 7519 §4 defines the payload as
+the "JWT Claims Set," a JSON object whose members are the claims conveyed
+by the token — it is a transport structure, not a container designed for
+secrecy. Keep sensitive data (raw passwords, full PII beyond what the
+resource server strictly needs) out of the claims, and use JWE if the
+payload genuinely must be confidential from the bearer.
 
 ## Real-world implementations
 
-- **GitHub** issues short-lived, narrowly scoped tokens for its
+- **GitHub** issues short-lived, narrowly scoped
   [personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
   and app-installation tokens rather than one long-lived unrevocable
-  credential, the same "keep it short-lived, keep the scope narrow"
-  principle that makes an unrevocable JWT tolerable in production.
+  credential — the practical version of the same short-lifetime,
+  narrow-scope principle that makes an unrevocable JWT tolerable in
+  production.
 
 ## References
 

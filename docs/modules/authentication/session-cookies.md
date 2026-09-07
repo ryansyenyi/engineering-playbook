@@ -19,10 +19,12 @@ sources:
 A session cookie holds an opaque identifier that maps, server-side, to
 session state — who is logged in, when the session started, what it is
 allowed to do. The browser stores and resends the cookie automatically per
-[RFC 6265bis](https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis),
-and the application looks the identifier up against a session store on
-every request. Unlike a [JWT](jwt.md), the token itself carries no claims —
-all state lives server-side, which is exactly what makes it revocable.
+[RFC 6265bis](https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-rfc6265bis)
+(the IETF's still-in-progress successor to RFC 6265, cited here as the
+current draft cookie specification, not a published RFC), and the
+application looks the identifier up against a session store on every
+request. Unlike a [JWT](jwt.md), the token itself carries no claims — all
+state lives server-side, which is exactly what makes it revocable.
 
 ### When to use
 
@@ -41,7 +43,7 @@ client-side JWT storage strategy can claim outright.
   [JWT](jwt.md) or [OAuth 2.0](oauth2.md) access token instead.
 - The application is horizontally scaled across many stateless instances
   with no shared session store, and adding one is not acceptable. The
-  matrix notes session cookies "need a shared session store" — a real
+  matrix rates session cookies as "needs shared session store" — a real
   operational cost a stateless JWT avoids.
 - The request needs to cross origins where cookies are blocked or
   stripped by default (some third-party embedded contexts, certain
@@ -177,10 +179,10 @@ client-side attributes.
 - **Microsoft Entra** issues browser session cookies for its sign-in
   experience and layers [Conditional
   Access](https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview)
-  evaluation on top, re-checking device and risk signals against the
-  active session rather than trusting the cookie's mere presence
-  indefinitely — the same "session is not a permanent grant" posture this
-  page's timeout guidance encodes.
+  policies "enforced after first-factor authentication is completed,"
+  re-checking device and risk signals against the active session rather
+  than trusting the cookie's mere presence indefinitely — the same
+  ongoing-verification posture this page's timeout guidance encodes.
 
 ## References
 

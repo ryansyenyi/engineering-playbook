@@ -6,7 +6,7 @@ reviewed: 2026-09-07
 tags: [Authentication, Tokens, OAuth]
 sources:
   - { type: rfc, name: "RFC 6749 §1.5 — The OAuth 2.0 Authorization Framework: Refresh Token", url: "https://www.rfc-editor.org/rfc/rfc6749#section-1.5" }
-  - { type: standard, name: "OAuth 2.0 Security Best Current Practice", url: "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics" }
+  - { type: standard, name: "OAuth 2.0 Security Best Current Practice (IETF Internet-Draft)", url: "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics" }
   - { type: vendor, name: "Auth0 Docs — Refresh Token Rotation", url: "https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation" }
 ---
 
@@ -18,10 +18,11 @@ sources:
 
 A refresh token is a long-lived credential exchanged for a new access
 token without requiring the user to log in again. [RFC 6749 §1.5](https://www.rfc-editor.org/rfc/rfc6749#section-1.5)
-defines it as a credential "used to obtain access tokens" that is "issued
-to the client by the authorization server and are used to obtain a new
-access token when the current access token becomes invalid or expires."
-It exists specifically so that access tokens — including [JWTs](jwt.md) —
+defines refresh tokens as "credentials used to obtain access tokens," and
+states that they "are issued to the client by the authorization server
+and are used to obtain a new access token when the current access token
+becomes invalid or expires..." It exists specifically so that access
+tokens — including [JWTs](jwt.md) —
 can be kept short-lived without forcing constant re-authentication; the
 refresh token absorbs the long-lived risk so the access token does not
 have to.
@@ -132,8 +133,10 @@ shipping it.
 - **Rotate on every use**: issue a new refresh token every time one is
   redeemed and invalidate the one just used, rather than allowing the same
   refresh token to be exchanged repeatedly — the OAuth 2.0 Security Best
-  Current Practice document recommends rotation specifically to limit the
-  window in which a stolen token remains useful.
+  Current Practice document (still an IETF Internet-Draft,
+  `draft-ietf-oauth-security-topics`, not yet a published RFC) recommends
+  rotation specifically to limit the window in which a stolen token
+  remains useful.
 - **Detect and act on reuse**: track refresh tokens as members of a
   family (all descendants of one original login). If a token that has
   already been marked used is presented again, treat it as evidence of
@@ -186,11 +189,12 @@ allows it.
 
 - **Auth0** implements [refresh token
   rotation](https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation)
-  as the recommended default for public clients (native and single-page
-  applications) specifically because these clients "cannot securely store
-  a Client Secret," issuing a new refresh token on every exchange and
-  automatically revoking the family when a rotated-out token is reused —
-  the same family-revocation behavior the flow diagram on this page
+  as the recommended default for public clients such as native and
+  single-page applications — the client type that cannot hold a
+  confidential client secret — issuing a new refresh token on every
+  exchange and automatically revoking the family when a rotated-out token
+  is reused — the same family-revocation behavior the flow diagram on this
+  page
   documents.
 
 ## References
@@ -199,7 +203,7 @@ allows it.
 | Type | Source |
 | --- | --- |
 | RFC | [RFC 6749 §1.5 — The OAuth 2.0 Authorization Framework: Refresh Token](https://www.rfc-editor.org/rfc/rfc6749#section-1.5) |
-| Standard | [OAuth 2.0 Security Best Current Practice](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics) |
+| Standard | [OAuth 2.0 Security Best Current Practice (IETF Internet-Draft)](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics) |
 | Vendor | [Auth0 Docs — Refresh Token Rotation](https://auth0.com/docs/secure/tokens/refresh-tokens/refresh-token-rotation) |
 <!-- generated:references end -->
 

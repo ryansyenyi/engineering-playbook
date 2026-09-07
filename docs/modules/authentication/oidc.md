@@ -17,13 +17,14 @@ sources:
 ### Purpose
 
 OpenID Connect (OIDC) is an identity layer built on top of
-[OAuth 2.0](oauth2.md). OpenID Connect Core 1.0 describes it as allowing
-clients "to verify the identity of the End-User... as well as to obtain
-basic profile information." It reuses OAuth 2.0's authorization code flow
-from [RFC 6749](https://www.rfc-editor.org/rfc/rfc6749) but adds a signed
-**ID token** — a JWT asserting who the user is — alongside the access
-token OAuth 2.0 already returns. Where OAuth 2.0 answers "what can this
-client do," OIDC answers "who is this user."
+[OAuth 2.0](oauth2.md). OpenID Connect Core 1.0's Abstract describes it as
+enabling clients "to verify the identity of the End-User based on the
+authentication performed by an Authorization Server, as well as to obtain
+basic profile information about the End-User." It reuses OAuth 2.0's
+authorization code flow from [RFC 6749](https://www.rfc-editor.org/rfc/rfc6749)
+but adds a signed **ID token** — a JWT asserting who the user is —
+alongside the access token OAuth 2.0 already returns. Where OAuth 2.0
+answers what a client can *do*, OIDC answers who the user *is*.
 
 ### When to use
 
@@ -31,9 +32,9 @@ Use OIDC whenever the actual requirement is authenticating a user against
 an external identity provider — [social login](social-login.md) against
 Google or a similar consumer provider, or [enterprise SSO](enterprise-sso.md)
 against an identity platform that offers an OIDC endpoint (many do, as an
-alternative to SAML). If you are about to build a "what can this token
-access" check without ever needing to know who the user is, you likely
-want bare [OAuth 2.0](oauth2.md) instead.
+alternative to SAML). If you are building a check for what a token can
+*access* without ever needing to know who the user is, you likely want
+bare [OAuth 2.0](oauth2.md) instead.
 
 ### When not to use
 
@@ -112,11 +113,12 @@ Validate any new OIDC integration against the
 
 ## Implementation examples
 
-- **Always request and verify `nonce`**: OpenID Connect Core 1.0 defines
-  `nonce` as a value that "associates a Client session with an ID Token,
-  and to mitigate replay attacks." Generate it per authentication request,
-  include it in the authorization request, and confirm the value returned
-  inside the ID token matches before accepting the token.
+- **Always request and verify `nonce`**: OpenID Connect Core 1.0 §3.1.2.1
+  defines `nonce` as a "String value used to associate a Client session
+  with an ID Token, and to mitigate replay attacks." Generate it per
+  authentication request, include it in the authorization request, and
+  confirm the value returned inside the ID token matches before accepting
+  the token.
 - **Verify the ID token fully before trusting it**: per OpenID Connect
   Core 1.0, the client must validate the signature against the issuer's
   published keys, confirm `iss` matches the expected provider, confirm the
@@ -149,7 +151,7 @@ a broader context.
 
 Without a `nonce` bound to the specific authentication request, a captured
 ID token from one session can potentially be replayed into another. OpenID
-Connect Core 1.0 defines `nonce` specifically "to mitigate replay
+Connect Core 1.0 §3.1.2.1 defines `nonce` specifically "to mitigate replay
 attacks." Generate a fresh `nonce` per login attempt, store it
 server-side or in a signed cookie, and reject any ID token whose `nonce`
 claim does not match.

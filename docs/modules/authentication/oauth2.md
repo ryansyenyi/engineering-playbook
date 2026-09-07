@@ -24,7 +24,7 @@ resource owner, client, authorization server, resource server — and a set
 of grant types that produce an access token the client presents to the
 resource server. It is the delegation mechanism underneath both
 [social login](social-login.md) and [OIDC](oidc.md); OAuth 2.0 itself
-answers "what can this client do," not "who is this user."
+answers what a client can *do*, not who the user *is*.
 
 ### When to use
 
@@ -118,24 +118,31 @@ shipping it.
 
 ## Implementation examples
 
-- **Always use PKCE, even with a confidential client**: per
-  [RFC 7636](https://www.rfc-editor.org/rfc/rfc7636), a public client
-  "cannot use 'client secrets'... because such applications do not have a
-  secure way to store the secret." PKCE binds the authorization code to the
-  client that requested it via `code_verifier`/`code_challenge`, defeating
-  authorization-code interception — RFC 7636 was written specifically
-  because "the attacker can intercept the authorization code returned...
-  and use it to obtain an access token." Generate the verifier with a
-  cryptographically random value and derive the challenge with `S256`, not
-  `plain`.
+- **Always use PKCE, even with a confidential client**: [RFC 6749](https://www.rfc-editor.org/rfc/rfc6749)
+  §2.1 defines a public client as one "incapable of maintaining the
+  confidentiality of their credentials... and incapable of secure client
+  authentication via any other means" — exactly the case
+  [RFC 7636](https://www.rfc-editor.org/rfc/rfc7636) §1 was written for:
+  RFC 7636 states that "OAuth 2.0 public clients... are susceptible to
+  the authorization code interception attack," in which "the attacker
+  intercepts the authorization code returned from the authorization
+  endpoint" and "can use it to obtain the access token." PKCE binds the
+  authorization code to the client that requested it via
+  `code_verifier`/`code_challenge`, defeating that interception. Generate
+  the verifier with a cryptographically random value and derive the
+  challenge with `S256`, not `plain`.
 - **Validate `redirect_uri` with an exact string match**, not a prefix or
-  pattern match, against a pre-registered allowlist — RFC 6749 requires
-  the authorization server to compare it, and a loose match is the most
+  pattern match, against a pre-registered allowlist — RFC 6749 §10.6
+  requires the authorization server to ensure the redirection URI used to
+  obtain the code "is identical to the redirection URI provided when
+  exchanging the authorization code for an access token," and to
+  "validate it against the registered value." A loose match is the most
   common OAuth misconfiguration.
-- **Always send and verify `state`**: RFC 6749 defines it as "used by the
-  client to maintain state between the request and callback," and in
-  practice it is the CSRF defense for the redirect step — reject any
-  callback whose `state` does not match the value the client generated.
+- **Always send and verify `state`**: RFC 6749 §4.1.1 defines it as "an
+  opaque value used by the client to maintain state between the request
+  and callback," and in practice it is the CSRF defense for the redirect
+  step — reject any callback whose `state` does not match the value the
+  client generated.
 - **Device flow for input-constrained clients**: for a CLI or a TV app
   that cannot receive a redirect, use the device authorization grant
   rather than trying to force an authorization-code flow onto a client
@@ -150,8 +157,8 @@ authorization server; RFC 6749 defines no standard claims about who the
 resource owner is. An application that logs a user in based solely on
 successfully fetching a resource with the token has built authentication
 on a framework that does not provide it. Use [OIDC](oidc.md)'s ID token,
-which is a signed assertion of identity, when the requirement is "who is
-this," not "what can this client fetch."
+which is a signed assertion of identity, when the requirement is knowing
+who the user is, not merely what the client can fetch.
 
 ### Skipping PKCE because the client has a client secret
 
@@ -173,14 +180,15 @@ URIs and reject anything that does not match byte-for-byte.
 
 ## Real-world implementations
 
-- **GitHub** implements the [device authorization
+- **GitHub** documents its [device authorization
   flow](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps)
-  for OAuth apps that "cannot open a web browser," such as its CLI: the
-  device displays a short code and a URL, the user enters the code at
+  as intended "for apps that don't have access to a web browser," listing
+  headless apps such as CLI tools as the target case: the device displays
+  a short code and a URL, the user enters the code at
   `github.com/login/device` on a separate browser, and the device polls
   the token endpoint until authorization completes — solving the
-  no-redirect-target problem this page's "When not to use" flags for a
-  bare authorization code grant.
+  no-redirect-target problem this page's When-not-to-use section flags for
+  a bare authorization code grant.
 
 ## References
 
