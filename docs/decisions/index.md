@@ -12,7 +12,9 @@ Why one approach was chosen over the alternatives, with the migration path
 out if the decision stops holding.
 
 <!-- generated:adr-index start -->
-_No decision records yet._
+| Decision | Module | Status | Date |
+| --- | --- | --- | --- |
+| [Use Argon2id for password hashing](0001-argon2id-for-password-hashing.md) | authentication | reviewed | 2026-09-07 |
 <!-- generated:adr-index end -->
 
 <!-- generated:references start -->
