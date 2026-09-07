@@ -126,7 +126,7 @@ shipping it.
 ## Implementation examples
 
 - **Registration-time breach check**: per the
-  [OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html),
+  [OWASP Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html),
   reject "common and previously breached passwords." The
   [Pwned Passwords API](https://haveibeenpwned.com/API/v3#PwnedPasswords)
   implements this without exposing the candidate password: the client
@@ -154,13 +154,18 @@ shipping it.
 
 ### Returning different responses for "no such account" vs. "wrong password"
 
-The OWASP Authentication Cheat Sheet requires a single generic message such
-as "Login failed; Invalid user ID or password," warning that "different
-HTTP codes or processing times can enable user enumeration." An attacker
-who can distinguish the two learns which email addresses have accounts
-before ever attempting to guess a password, turning a slow credential-
-stuffing campaign into a targeted one. Return one uniform failure for both
-cases, and keep the distinction only in server-side logs.
+The OWASP Authentication Cheat Sheet requires the application to "respond
+(both HTTP and HTML) in a generic manner," using a single generic message
+such as "Login failed; Invalid user ID or password." It separately warns
+that "[e]ven though a generic error page is shown to a user, the HTTP
+response code may differ which can leak information about whether the
+account is valid or not," and that "the processing time can be
+significantly different according to the case (success vs failure)
+allowing an attacker to mount a time-based attack." An attacker who can
+distinguish the two learns which email addresses have accounts before ever
+attempting to guess a password, turning a slow credential-stuffing
+campaign into a targeted one. Return one uniform failure for both cases,
+and keep the distinction only in server-side logs.
 
 ### Storing passwords with a fast, general-purpose hash
 

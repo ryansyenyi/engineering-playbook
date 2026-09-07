@@ -151,10 +151,11 @@ sequenceDiagram
 There is no "forgot passkey" email, because there is no shared secret to
 reset. If a user's only enrolled device is lost, stolen, or wiped, and no
 recovery path was designed in, the account is unrecoverable through this
-mechanism alone. FIDO Alliance's guidance is direct about the fix: use
-device-bound passkeys on security keys as recovery credentials, because
-they "eliminate the need for weak backup codes or helpdesk resets." Design
-and test the recovery path — a second enrolled authenticator, a
+mechanism alone. FIDO Alliance's guidance is direct about the fix: enroll
+device-bound passkeys on security keys as recovery credentials, because,
+in the Alliance's words, "using security keys eliminates the need for weak
+backup codes or helpdesk resets." Design and test the recovery path — a
+second enrolled authenticator, a
 recovery security key, or a fallback to a verified
 [email/password](email-password.md) or [enterprise SSO](enterprise-sso.md)
 account — before passkeys become the only way in.
