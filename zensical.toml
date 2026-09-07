@@ -1,18 +1,43 @@
-# Theme features removed after verification against zensical 0.0.59:
+# Deviations from the spec, verified against zensical 0.0.59:
 #   search.suggest — not implemented. Zensical does not validate feature
 #   names (config.py: features is checked only for list type), so it builds
 #   clean regardless. Verified absent from all templates, the JS bundle, the
 #   search worker, and zensical's own bootstrap/zensical.toml reference
-#   config. Re-test on version upgrade.
+#   config. Removed from `features` below. Re-test on version upgrade.
+#   section-index — not implemented. The string "section-index" appears
+#   nowhere in the installed package, and enabling
+#   `[project.plugins.section-index]` built clean but every nav section
+#   still rendered as a `<label>` toggle in the built HTML, not a link
+#   (same "unknown key accepted silently" trap as search.suggest above).
+#   Removed. Replaced with `navigation.indexes`, zensical's real equivalent
+#   (present in its own bootstrap/zensical.toml reference config) — verified
+#   working: after enabling it, a module section header renders as
+#   `<a href=".../index.html">` in site/modules/index.html instead of a
+#   bare `<label>`.
+#   table-reader — not implemented. No such plugin, extension, or string
+#   exists in the installed package. The spec (spec:32,59,225,343) claims
+#   it renders decision matrices from CSV; in this build, matrices are
+#   instead rendered by our own generator (tools/generate.py sync) into a
+#   `<!-- generated:matrix -->` block, same mechanism as the other six
+#   generated blocks. See spec:181-182 and spec:433, corrected accordingly.
+#   tags plugin tag-index listing — IS implemented, but not via the
+#   documented-looking `tags_file` key (that key raises a hard
+#   ValueError: "is deprecated; use a material/tags listing directive").
+#   The working mechanism is `listings = true` under
+#   `[project.plugins.tags]` plus a literal `<!-- material/tags -->` HTML
+#   comment embedded in a page (docs/tags.md). Verified by building and
+#   inspecting site/tags/index.html (a real tag listing with per-tag
+#   anchors) and a content page's tag chips, which now render as
+#   `<a href="…/tags/#tag:…">` instead of inert `<span>` elements.
 
 [project]
 site_name        = "Engineering Playbook"
 site_description = "Living architecture playbook: patterns, standards, decisions, checklists."
 docs_dir         = "docs"
 site_dir         = "site"
-site_url  = "https://pmadvisors-ryan.github.io/engineering-playbook/"
-repo_url  = "https://github.com/pmadvisors-ryan/engineering-playbook"
-repo_name = "pmadvisors-ryan/engineering-playbook"
+site_url  = "https://ryansyenyi.github.io/engineering-playbook/"
+repo_url  = "https://github.com/ryansyenyi/engineering-playbook"
+repo_name = "ryansyenyi/engineering-playbook"
 edit_uri  = "edit/main/docs/"
 extra_css = ["stylesheets/extra.css"]
 watch     = ["data", "tools"]
@@ -81,6 +106,7 @@ nav = [
     "matrices/password-hashing.md",
     "matrices/jwt-vs-session-cookies.md",
   ] },
+  { "Tags" = "tags.md" },
   { "What's moving" = [
     "recently-updated.md",
     "changelog.md",
@@ -91,6 +117,7 @@ nav = [
 [project.theme]
 variant = "modern"
 features = [
+  "navigation.indexes",
   "navigation.instant",
   "navigation.instant.prefetch",
   "navigation.instant.progress",
@@ -114,7 +141,7 @@ toggle = { icon = "lucide/moon", name = "Switch to light mode" }
 
 [project.plugins.search]
 [project.plugins.tags]
-[project.plugins.section-index]
+listings = true
 
 [project.validation]
 invalid_links = true

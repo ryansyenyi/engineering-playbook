@@ -29,7 +29,8 @@ Verified against Zensical documentation on 2026-09-07:
 | --- | --- |
 | Markdown, Python Markdown extensions | Supported |
 | Mermaid diagrams via `pymdownx.superfences` custom fence | Supported |
-| `search`, `tags`, `table-reader`, `section-index` plugins | Supported (`tags` since 0.0.58, `table-reader` since 0.0.41) |
+| `search`, `tags`, `section-index` plugins | Supported (`tags` since 0.0.58) |
+| `table-reader` plugin | Not implemented in 0.0.59 — matrices instead render through `tools/generate.py sync` into a `generated:matrix` block |
 | Instant navigation, prefetch, progress indicator | Supported |
 | Instant page previews on link hover | Supported |
 | Light/dark palette toggle | Supported |
@@ -55,9 +56,12 @@ research queue, ADR index, per-page status footer — is **derived** from
 front-matter and git history. It is never typed twice.
 
 Anything that is genuinely curated data rather than a byproduct — the
-engineering decision matrices — lives in `data/decisions/*.csv` and is
-rendered by the `table-reader` plugin. These matrices are the playbook's most
-reusable asset and deserve a structured, machine-readable home.
+engineering decision matrices — lives in `data/decisions/*.csv`. The
+`table-reader` plugin does not exist in zensical 0.0.59, so these are
+instead rendered by `tools/generate.py sync` into a `generated:matrix`
+block, the same mechanism as the other generated blocks. These matrices
+are the playbook's most reusable asset and deserve a structured,
+machine-readable home.
 
 The raw concept called for a hand-maintained changelog database. In a git
 repository that is a duplicate of history, so it is generated instead.
@@ -179,7 +183,7 @@ The generator writes into markdown sources between sentinel markers:
 ```
 
 Block names: `references`, `page-footer`, `recently-updated`, `changelog`,
-`research-queue`, `adr-index`.
+`research-queue`, `adr-index`, `matrix`.
 
 **Committed content depends only on front-matter; git-derived content does
 not get committed.** If a single commit touched both `jwt.md` and a committed
@@ -221,8 +225,10 @@ considered, references.
 **`checklist.md`** — verification items mapped to OWASP guidance where
 applicable, so the baseline is industry-standard rather than opinion-based.
 
-**`matrix.md`** — a page that embeds a `data/decisions/*.csv` table via
-`table-reader`, followed by the reasoning: why, tradeoffs, migration path.
+**`matrix.md`** — a page that embeds a `data/decisions/*.csv` table via a
+generator-rendered `generated:matrix` block (the `table-reader` plugin does
+not exist in 0.0.59), followed by the reasoning: why, tradeoffs, migration
+path.
 
 ## The generator
 
@@ -340,7 +346,8 @@ toggle = { icon = "lucide/moon", name = "Switch to light mode" }
 
 [project.plugins.search]
 [project.plugins.tags]
-[project.plugins.table-reader]
+# table-reader does not exist in 0.0.59; matrices render via
+# tools/generate.py sync into a generated:matrix block instead.
 [project.plugins.section-index]
 
 [project.markdown_extensions]
@@ -421,7 +428,7 @@ Complete when:
   diagrams for login, password reset, and refresh token flows.
 - One authentication checklist, two decision matrices (password hashing;
   JWT versus session cookies), and one ADR exist.
-- The remaining seven modules exist as stubs with valid front-matter.
+- The remaining six modules exist as stubs with valid front-matter.
 - The security section is indexed with its fifteen pages stubbed.
 - The generator passes its tests and runs in CI.
 - Templates and prompt files are in place.
@@ -430,7 +437,7 @@ Complete when:
 
 Outline synchronization; per-document version numbering as the changelog
 spine; social cards; a comment system; multiple languages; search analytics;
-any generator output beyond the six blocks named above.
+any generator output beyond the seven blocks named above.
 
 ## Roadmap beyond v1
 
