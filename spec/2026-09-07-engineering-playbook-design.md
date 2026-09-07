@@ -41,8 +41,8 @@ Verified against Zensical documentation on 2026-09-07:
 | Gap | Resolution |
 | --- | --- |
 | No blog plugin | `changelog.md` is generated from git history, grouped by month |
-| No `git-revision-date` plugin | Per-page "last updated" is generated into the page from `git log` |
-| No build-time `hooks` support | Generation runs as a pre-build script that writes into markdown sources; output is committed |
+| No `git-revision-date` plugin | Per-page "last updated" appears in the build-time generated `recently-updated.md` and `changelog.md`, not in the page itself |
+| No build-time `hooks` support | Generation runs as a pre-build script that writes into markdown sources |
 | No `gh-deploy` command | Deploy via `upload-pages-artifact` / `deploy-pages` GitHub Actions |
 | Alpha software | Exact version pin in `pyproject.toml`; CI never floats |
 
@@ -51,7 +51,7 @@ Verified against Zensical documentation on 2026-09-07:
 ### Approach: front-matter and git as the database, CSV for curated data
 
 Anything that is a byproduct of writing — recently updated, changelog,
-research queue, ADR index, per-page last-updated — is **derived** from
+research queue, ADR index, per-page status footer — is **derived** from
 front-matter and git history. It is never typed twice.
 
 Anything that is genuinely curated data rather than a byproduct — the
@@ -68,10 +68,10 @@ repository that is a duplicate of history, so it is generated instead.
 engineering_playbook/
 ├─ zensical.toml
 ├─ pyproject.toml
-├─ Makefile
 ├─ .github/workflows/docs.yml
 ├─ spec/                      # design documents (NOT published)
 ├─ tools/
+│  ├─ dev.py                 # cross-platform task runner
 │  ├─ generate.py
 │  ├─ playbook/
 │  │  ├─ frontmatter.py
@@ -92,9 +92,9 @@ engineering_playbook/
 │  └─ freshness-auditor.md
 └─ docs/
    ├─ index.md               # dashboard
-   ├─ recently-updated.md    # generated
-   ├─ changelog.md           # generated
-   ├─ research-queue.md      # generated
+   ├─ recently-updated.md    # build-time, gitignored
+   ├─ changelog.md           # build-time, gitignored
+   ├─ research-queue.md      # build-time, gitignored
    ├─ principles/
    ├─ modules/
    │  ├─ index.md
@@ -167,8 +167,7 @@ The `version` field exists for citation only.
 
 ### Generated blocks
 
-The generator writes into markdown sources between sentinel markers, and the
-output is committed:
+The generator writes into markdown sources between sentinel markers:
 
 ```markdown
 <!-- generated:references start -->
@@ -181,6 +180,23 @@ output is committed:
 
 Block names: `references`, `page-footer`, `recently-updated`, `changelog`,
 `research-queue`, `adr-index`.
+
+**Committed content depends only on front-matter; git-derived content does
+not get committed.** If a single commit touched both `jwt.md` and a committed
+"last updated" line for `jwt.md`, the generator would have computed that line
+from the *previous* commit, while CI checking out the new commit computes the
+current one — so `--check` would fail on every commit. The same applies to
+anything derived from today's date. The split:
+
+| Output | Derived from | Treatment |
+| --- | --- | --- |
+| `references`, `page-footer`, `adr-index` blocks | front-matter only | committed, verified by `--check` in CI |
+| `recently-updated.md`, `changelog.md`, `research-queue.md` | git history, today's date | generated at build time, gitignored |
+
+Generated pages carry `generated: true` in front-matter so validation and
+renderers skip them. The dashboard links to the three build-time pages rather
+than embedding their content, so `docs/index.md` is never rewritten at build
+time.
 
 Generating into committed sources rather than at build time means generated
 content is reviewable in `git diff` before it ships, the site builds with
@@ -238,7 +254,7 @@ file, because the per-file approach degrades badly past a hundred pages.
 - `research_queue(pages, today)` — stubs plus pages past their review interval
 - `adr_index(pages)` — every ADR with status and date
 - `references(page)` — the sources table
-- `page_footer(page, history)` — last updated, status, review due
+- `page_footer(page)` — status, last reviewed, review due (front-matter only)
 
 ### Error handling
 
@@ -373,10 +389,14 @@ Four Claude roles live in `prompts/` as plain markdown files, run by hand:
 Promoting any of these to a Claude Code skill is a later, separate decision,
 made only after a role has proven itself across several modules.
 
-### Make targets
+### Dev runner commands
 
-`install` · `gen` · `check` (pytest and `generate --check`) · `serve` ·
-`build` · `page KIND=module PATH=modules/authorization/index.md`
+`python tools/dev.py gen | check | serve | build | page --kind module
+--path modules/authorization/index.md --title "Authorization" --module authorization`
+
+A `dev.py` script rather than a `Makefile`: development is on Windows, where
+Git Bash ships no `make`, and a task runner that does not run on the author's
+machine is not a task runner.
 
 ### CI
 
