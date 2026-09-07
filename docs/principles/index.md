@@ -69,6 +69,8 @@ link here rather than restating them.
 
 </div>
 
+## References
+
 <!-- generated:references start -->
 _No sources recorded yet._
 <!-- generated:references end -->

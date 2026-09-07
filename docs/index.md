@@ -57,6 +57,8 @@ one was chosen, and how to verify it before it ships.
 -   __[Changelog](changelog.md)__ — every change, grouped by month
 -   __[Research queue](research-queue.md)__ — stubs and pages past their review date
 
+## References
+
 <!-- generated:references start -->
 _No sources recorded yet._
 <!-- generated:references end -->

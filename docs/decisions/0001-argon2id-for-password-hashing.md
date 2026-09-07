@@ -19,6 +19,10 @@ but is not memory hard and silently truncates input past 72 bytes. PBKDF2 is
 weakest against parallel hardware and is chosen almost entirely for
 compliance reasons.
 
+## Status
+
+Accepted
+
 ## Decision
 
 Argon2id is the default for all new password storage, with parameters tuned

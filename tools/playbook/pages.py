@@ -13,16 +13,38 @@ def _table(header: list[str], rows: list[str]) -> str:
     return "\n".join(["| " + " | ".join(header) + " |", divider, *rows])
 
 
+def _escape_cell(value: str) -> str:
+    """Escape a literal `|` so it cannot be mistaken for a column separator."""
+    return value.replace("|", "\\|")
+
+
 def _content_pages(all_pages: list[Page]) -> dict[str, Page]:
     return {page.path: page for page in all_pages if not page.generated}
+
+
+# Reference "type" values whose conventional label is an acronym rather than
+# a title-cased word. Anything not listed here falls back to `.title()`,
+# which is correct for prose-like types such as "standard" or "vendor" but
+# wrong for acronyms it hasn't seen (e.g. it would render "nist" as "Nist").
+_REFERENCE_TYPE_LABELS = {
+    "rfc": "RFC",
+    "w3c": "W3C",
+    "nist": "NIST",
+    "oasis": "OASIS",
+    "ietf": "IETF",
+}
+
+
+def _reference_type_label(type_: str) -> str:
+    return _REFERENCE_TYPE_LABELS.get(type_.lower(), type_.title())
 
 
 def render_references(page: Page) -> str:
     if not page.sources:
         return "_No sources recorded yet._"
     rows = [
-        f"| {source.type.upper() if len(source.type) <= 3 else source.type.title()} "
-        f"| [{source.name}]({source.url}) |"
+        f"| {_reference_type_label(source.type)} "
+        f"| [{_escape_cell(source.name)}]({source.url}) |"
         for source in page.sources
     ]
     return _table(["Type", "Source"], rows)
@@ -32,7 +54,10 @@ def render_matrix(rows: list[list[str]]) -> str:
     if not rows:
         return "_No matrix data._"
     header, *body = rows
-    table_rows = ["| " + " | ".join(row) + " |" for row in body]
+    header = [_escape_cell(cell) for cell in header]
+    table_rows = [
+        "| " + " | ".join(_escape_cell(cell) for cell in row) + " |" for row in body
+    ]
     return _table(header, table_rows)
 
 

@@ -18,11 +18,6 @@ sources: []
 
 ## Architecture overview
 
-``` mermaid
-sequenceDiagram
-  autonumber
-```
-
 ## Flow diagram
 
 ## Functional requirements

@@ -63,6 +63,8 @@ build them, why one was chosen, and how to verify it.
 
 </div>
 
+## References
+
 <!-- generated:references start -->
 _No sources recorded yet._
 <!-- generated:references end -->

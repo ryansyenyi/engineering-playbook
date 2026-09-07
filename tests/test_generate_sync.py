@@ -1,9 +1,6 @@
-import sys
 from pathlib import Path
 
 import pytest
-
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 
 import generate
 
@@ -32,7 +29,7 @@ def docs(tmp_path: Path) -> Path:
 
 
 def test_sync_appends_reference_and_footer_blocks(docs):
-    outputs, problems = generate.sync_outputs(docs)
+    outputs, problems = generate.sync_outputs(docs.parent, docs)
     assert problems == []
     text = outputs[docs / "modules" / "authentication" / "jwt.md"]
     assert "<!-- generated:references start -->" in text
@@ -42,7 +39,7 @@ def test_sync_appends_reference_and_footer_blocks(docs):
 
 def test_sync_reports_problems_and_produces_nothing(docs):
     (docs / "broken.md").write_text("# no front matter\n", encoding="utf-8")
-    outputs, problems = generate.sync_outputs(docs)
+    outputs, problems = generate.sync_outputs(docs.parent, docs)
     assert outputs == {}
     assert [str(problem) for problem in problems] == [
         "broken.md: front-matter: missing or malformed"
@@ -50,17 +47,17 @@ def test_sync_reports_problems_and_produces_nothing(docs):
 
 
 def test_sync_is_idempotent(docs):
-    generate.write(generate.sync_outputs(docs)[0])
+    generate.write(generate.sync_outputs(docs.parent, docs)[0])
     first = (docs / "modules" / "authentication" / "jwt.md").read_text(encoding="utf-8")
-    generate.write(generate.sync_outputs(docs)[0])
+    generate.write(generate.sync_outputs(docs.parent, docs)[0])
     second = (docs / "modules" / "authentication" / "jwt.md").read_text(encoding="utf-8")
     assert first == second
 
 
 def test_stale_is_empty_after_a_write(docs):
-    outputs, _ = generate.sync_outputs(docs)
+    outputs, _ = generate.sync_outputs(docs.parent, docs)
     generate.write(outputs)
-    assert generate.stale(generate.sync_outputs(docs)[0]) == []
+    assert generate.stale(generate.sync_outputs(docs.parent, docs)[0]) == []
 
 
 def test_main_sync_writes_and_returns_zero(docs, capsys):
@@ -133,7 +130,7 @@ def test_sync_fills_matrix_block_from_matching_csv(project):
     (data_dir / "password-hashing.csv").write_text(
         "Option,Score\nArgon2id,5\nbcrypt,3\n", encoding="utf-8"
     )
-    outputs, problems = generate.sync_outputs(project / "docs")
+    outputs, problems = generate.sync_outputs(project, project / "docs")
     assert problems == []
     text = outputs[project / "docs" / "matrices" / "password-hashing.md"]
     assert "<!-- generated:matrix start -->" in text
@@ -142,7 +139,7 @@ def test_sync_fills_matrix_block_from_matching_csv(project):
 
 
 def test_sync_reports_problem_for_missing_matrix_csv(project):
-    outputs, problems = generate.sync_outputs(project / "docs")
+    outputs, problems = generate.sync_outputs(project, project / "docs")
     assert outputs == {}
     assert len(problems) == 1
     problem = problems[0]

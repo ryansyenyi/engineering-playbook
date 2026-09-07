@@ -12,6 +12,8 @@ How to verify an implementation before it ships.
 
 - [Authentication](authentication.md)
 
+## References
+
 <!-- generated:references start -->
 _No sources recorded yet._
 <!-- generated:references end -->

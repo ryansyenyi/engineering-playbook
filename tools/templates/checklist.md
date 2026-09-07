@@ -8,8 +8,9 @@ sources: []
 
 # {{TITLE}}
 
-Every item maps to authoritative guidance so the baseline is industry
-standard rather than opinion.
+Every item reflects authoritative guidance so the baseline is industry
+standard rather than opinion; items with a direct source citation link to
+it.
 
 ## Before launch
 

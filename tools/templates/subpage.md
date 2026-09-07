@@ -33,4 +33,6 @@ sequenceDiagram
 
 ## Common mistakes
 
+## Real-world implementations
+
 ## References

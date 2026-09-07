@@ -14,6 +14,8 @@ its data from a CSV file, so the comparison stays structured and diffable.
 - [Password hashing](password-hashing.md)
 - [JWT vs session cookies](jwt-vs-session-cookies.md)
 
+## References
+
 <!-- generated:references start -->
 _No sources recorded yet._
 <!-- generated:references end -->

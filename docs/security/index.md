@@ -31,6 +31,8 @@ playbook inherits an industry standard instead of accumulating opinion.
 - [Backup strategy](backup-strategy.md)
 - [Incident response](incident-response.md)
 
+## References
+
 <!-- generated:references start -->
 _No sources recorded yet._
 <!-- generated:references end -->

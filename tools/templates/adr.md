@@ -10,6 +10,8 @@ sources: []
 
 ## Context
 
+## Status
+
 ## Decision
 
 ## Consequences

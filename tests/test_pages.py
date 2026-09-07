@@ -37,6 +37,34 @@ def test_render_references_handles_no_sources():
     assert pages.render_references(make_page("a.md")) == "_No sources recorded yet._"
 
 
+def test_render_references_escapes_a_pipe_in_the_source_name():
+    page = make_page(
+        "a.md",
+        sources=(Source("rfc", "RFC 7519 | JWT", "https://example.test/7519"),),
+    )
+    assert pages.render_references(page) == (
+        "| Type | Source |\n"
+        "| --- | --- |\n"
+        "| RFC | [RFC 7519 \\| JWT](https://example.test/7519) |"
+    )
+
+
+def test_render_references_labels_a_mapped_acronym_type():
+    page = make_page(
+        "a.md",
+        sources=(Source("nist", "SP 800-63B", "https://example.test/800-63b"),),
+    )
+    assert "| NIST |" in pages.render_references(page)
+
+
+def test_render_references_title_cases_an_unmapped_type():
+    page = make_page(
+        "a.md",
+        sources=(Source("blog", "Some Post", "https://example.test/post"),),
+    )
+    assert "| Blog |" in pages.render_references(page)
+
+
 def test_render_page_footer_without_review_date():
     assert pages.render_page_footer(make_page("a.md")) == "**Status:** draft"
 
@@ -154,3 +182,15 @@ def test_render_matrix_builds_a_table_from_csv_rows():
 
 def test_render_matrix_handles_empty_input():
     assert pages.render_matrix([]) == "_No matrix data._"
+
+
+def test_render_matrix_escapes_a_pipe_in_a_cell():
+    rows = [
+        ["Option", "Verdict"],
+        ["Argon2id", "Default | recommended"],
+    ]
+    assert pages.render_matrix(rows) == (
+        "| Option | Verdict |\n"
+        "| --- | --- |\n"
+        "| Argon2id | Default \\| recommended |"
+    )

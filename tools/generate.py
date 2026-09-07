@@ -24,6 +24,11 @@ def _matrix_csv_path(root: Path, page: frontmatter.Page) -> Path:
     return root / "data" / "decisions" / f"{stem}.csv"
 
 
+def _read_csv(path: Path) -> list[list[str]]:
+    with path.open(newline="", encoding="utf-8") as handle:
+        return [row for row in csv.reader(handle)]
+
+
 def _load_matrix_data(
     root: Path, parsed: list[frontmatter.Page]
 ) -> tuple[dict[str, list[list[str]]], list[frontmatter.Problem]]:
@@ -48,19 +53,17 @@ def _load_matrix_data(
                 frontmatter.Problem(page.path, "matrix", f"expected CSV at {relative}")
             )
             continue
-        with csv_path.open(newline="", encoding="utf-8") as handle:
-            data[page.path] = [row for row in csv.reader(handle)]
+        data[page.path] = _read_csv(csv_path)
     return data, problems
 
 
-def sync_outputs(docs_dir: Path) -> tuple[dict[Path, str], list[frontmatter.Problem]]:
+def sync_outputs(
+    root: Path, docs_dir: Path
+) -> tuple[dict[Path, str], list[frontmatter.Problem]]:
     parsed, problems = frontmatter.load_all(docs_dir)
     if problems:
         return {}, problems
 
-    # docs_dir is always root / "docs" (see main()); derive root from it
-    # rather than widening this function's signature just for matrix CSVs.
-    root = docs_dir.parent
     matrix_data, matrix_problems = _load_matrix_data(root, parsed)
     if matrix_problems:
         return {}, matrix_problems
@@ -143,7 +146,7 @@ def main(argv: list[str] | None = None) -> int:
     docs_dir = root / "docs"
 
     if args.command == "sync":
-        outputs, problems = sync_outputs(docs_dir)
+        outputs, problems = sync_outputs(root, docs_dir)
     else:
         outputs, problems = build_outputs(root, docs_dir, date.today())
 
