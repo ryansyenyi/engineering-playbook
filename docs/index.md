@@ -1,5 +1,8 @@
 ---
 title: Engineering Playbook
+module: home
+status: draft
+tags: [Playbook]
 ---
 
 # Engineering Playbook
@@ -21,3 +24,11 @@ sequenceDiagram
   Client->>Server: POST /login
   Server-->>Client: 200 + Set-Cookie
 ```
+
+<!-- generated:references start -->
+_No sources recorded yet._
+<!-- generated:references end -->
+
+<!-- generated:page-footer start -->
+**Status:** draft
+<!-- generated:page-footer end -->
