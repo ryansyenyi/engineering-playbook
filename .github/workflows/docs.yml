@@ -30,6 +30,8 @@ jobs:
         run: uv run python tools/dev.py check
       - name: Generate build-time pages
         run: uv run python tools/generate.py build
+      - name: Generate nav status manifest
+        run: uv run python tools/nav_manifest.py
       - name: "Build site (strict: fail on broken links/refs)"
         run: uv run zensical build --clean --strict
       - uses: actions/upload-pages-artifact@v3
