@@ -1,3 +1,10 @@
+# Theme features removed after verification against zensical 0.0.59:
+#   search.suggest — not implemented. Zensical does not validate feature
+#   names (config.py: features is checked only for list type), so it builds
+#   clean regardless. Verified absent from all templates, the JS bundle, the
+#   search worker, and zensical's own bootstrap/zensical.toml reference
+#   config. Re-test on version upgrade.
+
 [project]
 site_name        = "Engineering Playbook"
 site_description = "Living architecture playbook: patterns, standards, decisions, checklists."
@@ -14,7 +21,6 @@ features = [
   "navigation.top",
   "toc.follow",
   "search.highlight",
-  "search.suggest",
   "content.code.copy",
   "content.action.edit",
 ]
