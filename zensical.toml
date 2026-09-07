@@ -10,6 +10,80 @@ site_name        = "Engineering Playbook"
 site_description = "Living architecture playbook: patterns, standards, decisions, checklists."
 docs_dir         = "docs"
 site_dir         = "site"
+site_url  = "https://pmadvisors-ryan.github.io/engineering-playbook/"
+repo_url  = "https://github.com/pmadvisors-ryan/engineering-playbook"
+repo_name = "pmadvisors-ryan/engineering-playbook"
+edit_uri  = "edit/main/docs/"
+extra_css = ["stylesheets/extra.css"]
+watch     = ["data", "tools"]
+
+nav = [
+  { "Playbook" = "index.md" },
+  { "Principles" = [
+    "principles/index.md",
+    "principles/security-first.md",
+    "principles/api-first.md",
+    "principles/cloud-native.md",
+    "principles/twelve-factor.md",
+    "principles/multi-tenant-design.md",
+    "principles/least-privilege.md",
+    "principles/defense-in-depth.md",
+    "principles/event-driven-architecture.md",
+    "principles/domain-driven-design.md",
+  ] },
+  { "Modules" = [
+    "modules/index.md",
+    { "Authentication" = [
+      "modules/authentication/index.md",
+      "modules/authentication/email-password.md",
+      "modules/authentication/magic-link.md",
+      "modules/authentication/passkeys.md",
+      "modules/authentication/social-login.md",
+      "modules/authentication/enterprise-sso.md",
+      "modules/authentication/oidc.md",
+      "modules/authentication/oauth2.md",
+      "modules/authentication/jwt.md",
+      "modules/authentication/session-cookies.md",
+      "modules/authentication/refresh-tokens.md",
+    ] },
+    "modules/authorization/index.md",
+    "modules/multi-tenancy/index.md",
+    "modules/api-design/index.md",
+    "modules/database-design/index.md",
+    "modules/networking/index.md",
+    "modules/observability/index.md",
+  ] },
+  { "Security" = [
+    "security/index.md",
+    "security/password-storage.md",
+    "security/session-security.md",
+    "security/secrets-management.md",
+    "security/encryption.md",
+    "security/api-security.md",
+    "security/oauth-security.md",
+    "security/owasp-top-10.md",
+    "security/audit-logging.md",
+    "security/rate-limiting.md",
+    "security/mfa.md",
+    "security/sso.md",
+    "security/secure-headers.md",
+    "security/key-rotation.md",
+    "security/backup-strategy.md",
+    "security/incident-response.md",
+  ] },
+  { "Decisions" = [ "decisions/index.md" ] },
+  { "Checklists" = [ "checklists/index.md", "checklists/authentication.md" ] },
+  { "Matrices" = [
+    "matrices/index.md",
+    "matrices/password-hashing.md",
+    "matrices/jwt-vs-session-cookies.md",
+  ] },
+  { "What's moving" = [
+    "recently-updated.md",
+    "changelog.md",
+    "research-queue.md",
+  ] },
+]
 
 [project.theme]
 variant = "modern"
