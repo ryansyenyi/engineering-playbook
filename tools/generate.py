@@ -38,6 +38,35 @@ def sync_outputs(docs_dir: Path) -> tuple[dict[Path, str], list[frontmatter.Prob
     return outputs, []
 
 
+GENERATED_PAGES = {
+    "recently-updated.md": "Recently updated",
+    "changelog.md": "Changelog",
+    "research-queue.md": "Research queue",
+}
+
+
+def build_outputs(
+    root: Path, docs_dir: Path, today: date
+) -> tuple[dict[Path, str], list[frontmatter.Problem]]:
+    parsed, problems = frontmatter.load_all(docs_dir)
+    if problems:
+        return {}, problems
+    commits = gitmeta.history(root, docs_dir)
+    latest = gitmeta.latest_by_path(commits)
+    bodies = {
+        "recently-updated.md": renderers.render_recently_updated(parsed, latest),
+        "changelog.md": renderers.render_changelog(commits, parsed),
+        "research-queue.md": renderers.render_research_queue(parsed, today),
+    }
+    outputs: dict[Path, str] = {}
+    for name, body in bodies.items():
+        title = GENERATED_PAGES[name]
+        outputs[docs_dir / name] = (
+            f"---\ntitle: {title}\ngenerated: true\n---\n\n# {title}\n\n{body}\n"
+        )
+    return outputs, []
+
+
 def stale(outputs: dict[Path, str]) -> list[Path]:
     return [
         path
