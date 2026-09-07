@@ -1,0 +1,7 @@
+Criterion,JWT (stateless),Session cookie (server state)
+Revocation,Hard — token valid until expiry,Easy — delete the session
+Horizontal scale,No shared store needed,Needs shared session store
+Payload size,Grows with claims,Opaque identifier only
+XSS exposure,High if stored in localStorage,Low with HttpOnly
+Logout semantics,Needs a denylist,Immediate
+Best fit,Short-lived service-to-service,Browser-facing applications

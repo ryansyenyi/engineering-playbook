@@ -11,6 +11,7 @@ Two subcommands with different guarantees:
 from __future__ import annotations
 
 import argparse
+import csv
 import sys
 from datetime import date
 from pathlib import Path
@@ -18,10 +19,52 @@ from pathlib import Path
 from playbook import blocks, frontmatter, gitmeta, pages as renderers
 
 
+def _matrix_csv_path(root: Path, page: frontmatter.Page) -> Path:
+    stem = Path(page.path).stem
+    return root / "data" / "decisions" / f"{stem}.csv"
+
+
+def _load_matrix_data(
+    root: Path, parsed: list[frontmatter.Page]
+) -> tuple[dict[str, list[list[str]]], list[frontmatter.Problem]]:
+    """Read the CSV backing every matrix page (except matrices/index.md).
+
+    Matrices are pure sync inputs, same as front-matter: deterministic,
+    committed, and checked by `--check`. A missing CSV is collected as a
+    Problem rather than raised, consistent with every other validation
+    failure in this module.
+    """
+    data: dict[str, list[list[str]]] = {}
+    problems: list[frontmatter.Problem] = []
+    for page in parsed:
+        if page.generated:
+            continue
+        if not page.path.startswith("matrices/") or page.path == "matrices/index.md":
+            continue
+        csv_path = _matrix_csv_path(root, page)
+        if not csv_path.exists():
+            relative = csv_path.relative_to(root).as_posix()
+            problems.append(
+                frontmatter.Problem(page.path, "matrix", f"expected CSV at {relative}")
+            )
+            continue
+        with csv_path.open(newline="", encoding="utf-8") as handle:
+            data[page.path] = [row for row in csv.reader(handle)]
+    return data, problems
+
+
 def sync_outputs(docs_dir: Path) -> tuple[dict[Path, str], list[frontmatter.Problem]]:
     parsed, problems = frontmatter.load_all(docs_dir)
     if problems:
         return {}, problems
+
+    # docs_dir is always root / "docs" (see main()); derive root from it
+    # rather than widening this function's signature just for matrix CSVs.
+    root = docs_dir.parent
+    matrix_data, matrix_problems = _load_matrix_data(root, parsed)
+    if matrix_problems:
+        return {}, matrix_problems
+
     outputs: dict[Path, str] = {}
     for page in parsed:
         if page.generated:
@@ -33,6 +76,10 @@ def sync_outputs(docs_dir: Path) -> tuple[dict[Path, str], list[frontmatter.Prob
         if page.path == "decisions/index.md":
             text = blocks.upsert_block(
                 text, "adr-index", renderers.render_adr_index(parsed)
+            )
+        if page.path in matrix_data:
+            text = blocks.upsert_block(
+                text, "matrix", renderers.render_matrix(matrix_data[page.path])
             )
         outputs[file] = text
     return outputs, []

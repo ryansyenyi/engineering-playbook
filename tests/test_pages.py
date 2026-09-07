@@ -136,3 +136,21 @@ def test_render_research_queue_skips_generated_pages():
     assert pages.render_research_queue(all_pages, date(2026, 9, 7)) == (
         "_Nothing queued. Every page is written and within its review interval._"
     )
+
+
+def test_render_matrix_builds_a_table_from_csv_rows():
+    rows = [
+        ["Option", "Score", "Verdict"],
+        ["Argon2id", "5", "Default choice"],
+        ["bcrypt", "3", "Acceptable legacy"],
+    ]
+    assert pages.render_matrix(rows) == (
+        "| Option | Score | Verdict |\n"
+        "| --- | --- | --- |\n"
+        "| Argon2id | 5 | Default choice |\n"
+        "| bcrypt | 3 | Acceptable legacy |"
+    )
+
+
+def test_render_matrix_handles_empty_input():
+    assert pages.render_matrix([]) == "_No matrix data._"

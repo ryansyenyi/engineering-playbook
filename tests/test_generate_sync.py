@@ -96,3 +96,55 @@ def test_files_are_written_with_unix_newlines(docs):
     generate.main(["sync", "--root", str(docs.parent)])
     raw = (docs / "modules" / "authentication" / "jwt.md").read_bytes()
     assert b"\r\n" not in raw
+
+
+MATRIX_PAGE = """---
+title: Password hashing
+module: authentication
+status: reviewed
+reviewed: 2026-09-07
+tags: [Decision matrix, Authentication]
+sources: []
+---
+
+# Password hashing
+
+<!-- generated:matrix start -->
+_Matrix data is generated from data/decisions/password-hashing.csv._
+<!-- generated:matrix end -->
+
+## Why
+"""
+
+
+@pytest.fixture
+def project(tmp_path: Path) -> Path:
+    docs_dir = tmp_path / "docs"
+    (docs_dir / "matrices").mkdir(parents=True)
+    (docs_dir / "matrices" / "password-hashing.md").write_text(
+        MATRIX_PAGE, encoding="utf-8"
+    )
+    return tmp_path
+
+
+def test_sync_fills_matrix_block_from_matching_csv(project):
+    data_dir = project / "data" / "decisions"
+    data_dir.mkdir(parents=True)
+    (data_dir / "password-hashing.csv").write_text(
+        "Option,Score\nArgon2id,5\nbcrypt,3\n", encoding="utf-8"
+    )
+    outputs, problems = generate.sync_outputs(project / "docs")
+    assert problems == []
+    text = outputs[project / "docs" / "matrices" / "password-hashing.md"]
+    assert "<!-- generated:matrix start -->" in text
+    assert "| Argon2id | 5 |" in text
+    assert "| bcrypt | 3 |" in text
+
+
+def test_sync_reports_problem_for_missing_matrix_csv(project):
+    outputs, problems = generate.sync_outputs(project / "docs")
+    assert outputs == {}
+    assert len(problems) == 1
+    problem = problems[0]
+    assert problem.path == "matrices/password-hashing.md"
+    assert "data/decisions/password-hashing.csv" in str(problem)

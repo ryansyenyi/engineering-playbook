@@ -28,6 +28,14 @@ def render_references(page: Page) -> str:
     return _table(["Type", "Source"], rows)
 
 
+def render_matrix(rows: list[list[str]]) -> str:
+    if not rows:
+        return "_No matrix data._"
+    header, *body = rows
+    table_rows = ["| " + " | ".join(row) + " |" for row in body]
+    return _table(header, table_rows)
+
+
 def render_page_footer(page: Page) -> str:
     parts = [f"**Status:** {page.status}"]
     if page.reviewed is not None and page.review_due is not None:

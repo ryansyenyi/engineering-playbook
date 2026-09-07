@@ -71,7 +71,10 @@ nav = [
     "security/backup-strategy.md",
     "security/incident-response.md",
   ] },
-  { "Decisions" = [ "decisions/index.md" ] },
+  { "Decisions" = [
+    "decisions/index.md",
+    "decisions/0001-argon2id-for-password-hashing.md",
+  ] },
   { "Checklists" = [ "checklists/index.md", "checklists/authentication.md" ] },
   { "Matrices" = [
     "matrices/index.md",
@@ -111,7 +114,6 @@ toggle = { icon = "lucide/moon", name = "Switch to light mode" }
 
 [project.plugins.search]
 [project.plugins.tags]
-[project.plugins.table-reader]
 [project.plugins.section-index]
 
 [project.validation]

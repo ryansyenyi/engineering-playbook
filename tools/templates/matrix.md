@@ -8,7 +8,9 @@ sources: []
 
 # {{TITLE}}
 
-{{ read_csv('data/decisions/CHANGE-ME.csv') }}
+<!-- generated:matrix start -->
+_Matrix data is generated from data/decisions/&lt;name&gt;.csv._
+<!-- generated:matrix end -->
 
 ## Why
 
