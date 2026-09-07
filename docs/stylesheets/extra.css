@@ -1,0 +1,4 @@
+/* Give generated tables room to breathe on wide pages. */
+.md-typeset table:not([class]) {
+  font-size: 0.75rem;
+}
