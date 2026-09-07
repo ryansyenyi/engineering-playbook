@@ -29,7 +29,8 @@ Verified against Zensical documentation on 2026-09-07:
 | --- | --- |
 | Markdown, Python Markdown extensions | Supported |
 | Mermaid diagrams via `pymdownx.superfences` custom fence | Supported |
-| `search`, `tags`, `section-index` plugins | Supported (`tags` since 0.0.58) |
+| `search`, `tags` plugins | Supported (`tags` since 0.0.58) |
+| `section-index` plugin | **Not supported.** Declared but inert in 0.0.59; the theme feature `navigation.indexes` provides the behaviour instead |
 | `table-reader` plugin | Not implemented in 0.0.59 — matrices instead render through `tools/generate.py sync` into a `generated:matrix` block |
 | Instant navigation, prefetch, progress indicator | Supported |
 | Instant page previews on link hover | Supported |
@@ -348,7 +349,6 @@ toggle = { icon = "lucide/moon", name = "Switch to light mode" }
 [project.plugins.tags]
 # table-reader does not exist in 0.0.59; matrices render via
 # tools/generate.py sync into a generated:matrix block instead.
-[project.plugins.section-index]
 
 [project.markdown_extensions]
 pymdownx.superfences.custom_fences = [
@@ -361,13 +361,13 @@ Notes:
 - **Version floor `zensical >= 0.0.58`**, pinned exactly in `pyproject.toml`.
 - **`variant = "modern"`**; `classic` exists to preserve the appearance of
   migrated Material for MkDocs projects, which does not apply here.
-- **`section-index`** makes each module's `index.md` the clickable section
+- **`navigation.indexes`** (a theme feature, not a plugin) makes each module's `index.md` the clickable section
   header, so selecting "Authentication" opens the overview.
 - **Feature list requires a smoke build.** `navigation.instant*`,
   `search.highlight`, `content.action.edit`, the palette configuration, and
   the mermaid fence are confirmed in Zensical's documentation.
-  `navigation.sections`, `navigation.top`, `toc.follow`, `search.suggest`,
-  and `content.code.copy` come from the Material for MkDocs feature surface
+  `navigation.sections`, `navigation.top`, `toc.follow`, and
+  `content.code.copy` come from the Material for MkDocs feature surface
   that Zensical states it supports in full but does not enumerate
   individually. The first implementation step confirms each one against a
   real build; any that fail are removed from the list rather than worked
