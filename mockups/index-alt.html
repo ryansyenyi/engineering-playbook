@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engineering Playbook · terminal variant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/playbook.css">
+<style>
+  /* Variant B — the mono voice leads. Same tokens, different display register. */
+  .thero { padding: 40px 0 10px; }
+  .thero h1 {
+    font-family: var(--mono);
+    font-weight: 800;
+    font-size: clamp(28px, 3.8vw, 46px);
+    line-height: 1.18;
+    letter-spacing: -0.04em;
+    margin: 18px 0;
+    max-width: 24ch;
+  }
+  .thero h1 .p { color: var(--faint); }
+  .thero h1 .a { color: var(--accent); }
+  .prompt {
+    display: flex; align-items: center; gap: 12px;
+    max-width: 560px; margin: 28px 0;
+    background: var(--bg-raise);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 13px 16px;
+    font-family: var(--mono); font-size: 13.5px;
+    cursor: text;
+    transition: border-color var(--fast);
+  }
+  .prompt:hover { border-color: var(--accent); }
+  .prompt .ps1 { color: var(--ok); font-weight: 700; }
+  .prompt .q { color: var(--text-dim); }
+  .prompt .cursor {
+    display: inline-block; width: 8px; height: 16px;
+    background: var(--accent); vertical-align: text-bottom;
+    animation: blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .prompt kbd { margin-left: auto; }
+  .tgrid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+    margin: 30px 0;
+  }
+  .tcell {
+    padding: 20px; border-right: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft);
+    transition: background var(--fast);
+  }
+  .tcell:nth-child(3n) { border-right: none; }
+  .tcell:nth-child(n+4) { border-bottom: none; }
+  a.tcell:hover { background: var(--bg-raise); }
+  .tcell .cmd { font-family: var(--mono); font-size: 12.5px; font-weight: 700; color: var(--accent); display: block; margin-bottom: 6px; }
+  .tcell p { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+  @media (max-width: 760px) {
+    .tgrid { grid-template-columns: 1fr; }
+    .tcell { border-right: none !important; border-bottom: 1px solid var(--line-soft) !important; }
+    .tcell:last-child { border-bottom: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <header class="topbar">
+    <a class="wordmark" href="index-alt.html"><span class="mark"></span>Engineering Playbook</a>
+    <span class="label" style="color:var(--warn)">Variant B · mono display</span>
+    <button class="search-hint" onclick="location.href='search.html'">Search the playbook… <kbd>Ctrl K</kbd></button>
+  </header>
+
+  <nav class="rail">
+    <span class="label">Playbook</span>
+    <a href="index-alt.html" class="active">Overview</a>
+    <a href="principles.html">Principles</a>
+    <a href="module-authentication.html">Architecture library</a>
+    <a href="adr-0001.html">Decision records</a>
+    <a href="checklist-authentication.html">Checklists</a>
+    <a href="matrix-jwt-vs-sessions.html">Matrices</a>
+    <span class="label">What's moving</span>
+    <a href="changelog.html">Changelog</a>
+    <a href="research-queue.html">Research queue <span class="dot dot--warn"></span></a>
+  </nav>
+
+  <main class="main">
+    <section class="thero rise">
+      <span class="label label--accent">A living architecture playbook</span>
+      <h1><span class="p">$</span> options<span class="p">,</span> reasons<span class="p">,</span><br>and <span class="a">proof it ships</span><span class="p">_</span></h1>
+      <p class="lede" style="max-width:52ch">Implementation guides, decision records, and production checklists — with review status and sources on every page.</p>
+    </section>
+
+    <div class="prompt rise d1" onclick="location.href='search.html'">
+      <span class="ps1">playbook›</span>
+      <span class="q">how do we revoke a JWT</span><span class="cursor"></span>
+      <kbd>Ctrl K</kbd>
+    </div>
+
+    <span class="label rise d2" style="display:block;margin-bottom:10px">Start from</span>
+    <section class="tgrid rise d2">
+      <a class="tcell" href="matrix-jwt-vs-sessions.html"><span class="cmd">choose →</span><p>Decision matrices. Scored comparisons for choices under time pressure.</p></a>
+      <a class="tcell" href="module-jwt.html"><span class="cmd">build →</span><p>Architecture library. Complete implementation guides, module by module.</p></a>
+      <a class="tcell" href="checklist-authentication.html"><span class="cmd">verify →</span><p>Production checklists. Prove it before it ships.</p></a>
+      <a class="tcell" href="adr-0001.html"><span class="cmd">justify →</span><p>Decision records. Why one approach won, and the way back out.</p></a>
+      <a class="tcell" href="principles.html"><span class="cmd">align →</span><p>Principles. The commitments every module is written against.</p></a>
+      <a class="tcell" href="research-queue.html"><span class="cmd">audit →</span><p>Research queue. What's missing, what's stale, how overdue.</p></a>
+    </section>
+
+    <span class="label rise d3" style="display:block;margin-bottom:10px">Coverage</span>
+    <table class="tbl rise d3" style="max-width:560px">
+      <tbody>
+        <tr><td>Reviewed</td><td class="mono" style="color:var(--ok)">████████████░░░░░░░░ 31</td></tr>
+        <tr><td>Draft</td><td class="mono" style="color:var(--warn)">██████░░░░░░░░░░░░░░ 14</td></tr>
+        <tr><td>Stub</td><td class="mono" style="color:var(--bad)">████░░░░░░░░░░░░░░░░ 12</td></tr>
+      </tbody>
+    </table>
+  </main>
+</div>
+
+<footer class="statusline">
+  <span class="sl-mode">PLAYBOOK</span>
+  <span>~/engineering-playbook</span>
+  <span class="ok">31 reviewed</span>
+  <span class="warn">14 draft</span>
+  <span class="bad">12 stub</span>
+  <span class="sl-right">variant B · mono display</span>
+</footer>
+
+</body>
+</html>

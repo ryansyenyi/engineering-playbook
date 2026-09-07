@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04 · Monoblack</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#000000; --panel:#0a0a0a; --line:#262626; --line-soft:#171717;
+    --text:#f2f2f2; --dim:#c4c4c4; --muted:#8a8a8a; --faint:#555;
+    --accent:#3b82f6; --ok:#4ade80; --bad:#f87171; --warn:#fbbf24;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font:13px/1.75 "JetBrains Mono",monospace; padding-bottom:30px; }
+  a { color:inherit; text-decoration:none; }
+  .top { display:flex; align-items:center; gap:20px; height:46px; padding:0 20px; border-bottom:1px solid var(--line); font-size:12px; }
+  .wd { font-weight:800; letter-spacing:.04em; }
+  .wd::before { content:"▮ "; color:var(--accent); }
+  .crumb { color:var(--muted); }
+  .crumb b { color:var(--dim); font-weight:400; }
+  .kbd { margin-left:auto; color:var(--muted); border:1px solid var(--line); padding:1px 7px; font-size:10.5px; }
+  main { max-width:78ch; margin:0 auto; padding:48px 24px 90px; }
+  .rule { color:var(--faint); white-space:nowrap; overflow:hidden; font-size:12px; margin:6px 0; }
+  .kick { display:flex; gap:18px; font-size:11px; text-transform:uppercase; letter-spacing:.12em; }
+  .kick .m { color:var(--accent); }
+  .kick .ok { color:var(--ok); }
+  h1 { font:800 clamp(34px,4.8vw,52px)/1.05 "JetBrains Mono",monospace; letter-spacing:-.05em; margin:14px 0 16px; }
+  h1::after { content:"_"; color:var(--accent); }
+  .lede { color:var(--dim); max-width:64ch; font-size:13.5px; }
+  h2 { font:700 13px "JetBrains Mono",monospace; letter-spacing:.14em; text-transform:uppercase; margin:44px 0 10px; }
+  h2::before { content:"## "; color:var(--accent); }
+  p { margin:12px 0; color:var(--dim); }
+  strong { color:var(--text); font-weight:700; }
+  .link { color:var(--accent); text-decoration:underline; text-underline-offset:3px; }
+  pre { border:1px solid var(--line); background:var(--panel); padding:16px 18px; margin:16px 0; font:12.5px/1.7 "JetBrains Mono",monospace; color:var(--dim); overflow-x:auto; }
+  pre .c{color:var(--faint)} pre .k{color:var(--accent)} pre .s{color:var(--ok)} pre .n{color:var(--warn)}
+  table { width:100%; border-collapse:collapse; font-size:12.5px; margin:16px 0; }
+  th { font:700 10.5px "JetBrains Mono",monospace; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); text-align:left; padding:9px 12px; border:1px solid var(--line); }
+  td { padding:10px 12px; border:1px solid var(--line-soft); color:var(--dim); }
+  td:first-child { color:var(--text); font-weight:500; }
+  .win{color:var(--ok)} .lose{color:var(--bad)}
+  .win::before{content:"[+] "} .lose::before{content:"[-] "}
+  .sl { position:fixed; inset:auto 0 0 0; height:30px; display:flex; align-items:center; background:var(--bg); border-top:1px solid var(--line); font:11px "JetBrains Mono",monospace; color:var(--muted); }
+  .sl>span { padding:0 14px; height:100%; display:inline-flex; align-items:center; gap:7px; border-right:1px solid var(--line-soft); }
+  .sl .mode { background:var(--text); color:var(--bg); font-weight:800; letter-spacing:.08em; }
+  .sl .r { margin-left:auto; border-right:none; }
+  .sl .ok { color:var(--ok); }
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="wd">ENGINEERING PLAYBOOK</span>
+  <span class="crumb">modules/authentication/<b>jwt.md</b></span>
+  <span class="kbd">^K</span>
+</header>
+<main>
+  <div class="kick"><span class="m">module: authentication</span><span class="ok">status: reviewed 2026-09-07</span></div>
+  <h1>JWT</h1>
+  <div class="rule">════════════════════════════════════════════════════════════════════</div>
+  <p class="lede">A signed, self-contained set of claims a recipient can verify without calling back to the issuer. That stateless property is the entire reason to reach for a JWT — and the source of everything hard about revoking one.</p>
+
+  <h2>When to use</h2>
+  <p>Use a JWT as an <strong>access token for service-to-service calls</strong> where the verifying party should not need a shared session store. Keep lifetimes short: the token is a bearer credential you cannot take back before it expires. For browser-facing applications, prefer a <a class="link" href="#">session cookie</a>.</p>
+
+<pre><span class="c"># verifier configuration — the four checks that matter</span>
+<span class="k">algorithms</span>: [<span class="s">"EdDSA"</span>]          <span class="c"># pinned, never "none"</span>
+<span class="k">issuer</span>:     <span class="s">"https://auth.internal"</span>
+<span class="k">audience</span>:   <span class="s">"orders-api"</span>
+<span class="k">max_ttl</span>:    <span class="n">300</span>                   <span class="c"># seconds — short by default</span></pre>
+
+  <h2>Scored comparison</h2>
+  <table>
+    <thead><tr><th>Criterion</th><th>JWT (stateless)</th><th>Session cookie</th></tr></thead>
+    <tbody>
+      <tr><td>Revocation</td><td class="lose">Hard — valid until expiry</td><td class="win">Easy — delete session</td></tr>
+      <tr><td>Horizontal scale</td><td class="win">No shared store needed</td><td class="lose">Needs shared store</td></tr>
+      <tr><td>Logout semantics</td><td class="lose">Needs a denylist</td><td class="win">Immediate</td></tr>
+    </tbody>
+  </table>
+</main>
+<footer class="sl">
+  <span class="mode">NORMAL</span>
+  <span>jwt.md</span>
+  <span class="ok">✓ reviewed</span>
+  <span>utf-8 · md</span>
+  <span class="r">04 · Monoblack — brutalist mono, pure black</span>
+</footer>
+</body>
+</html>

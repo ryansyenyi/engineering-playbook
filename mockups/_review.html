@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup review · Engineering Playbook redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/playbook.css">
+<style>
+  .wrap { max-width: 760px; margin: 0 auto; padding: 60px 24px 100px; }
+  .wrap h1 { font-family: var(--display); font-weight: 650; font-size: clamp(30px,4vw,44px); letter-spacing: -0.028em; margin: 12px 0 10px; }
+  .wrap .lede { color: var(--muted); font-size: 15px; max-width: 58ch; }
+  .list { margin-top: 34px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .list a {
+    display: grid; grid-template-columns: 36px 1fr auto; gap: 16px; align-items: baseline;
+    padding: 14px 20px; border-bottom: 1px solid var(--line-soft);
+    color: var(--text-dim); transition: background var(--fast);
+  }
+  .list a:last-child { border-bottom: none; }
+  .list a:hover { background: var(--bg-raise); }
+  .list .n { font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--accent); }
+  .list b { color: var(--text); font-weight: 600; font-size: 14px; display: block; }
+  .list small { color: var(--muted); font-size: 12.5px; }
+  .list .k { font-family: var(--mono); font-size: 10.5px; color: var(--faint); text-transform: uppercase; letter-spacing: .08em; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <span class="label label--accent">Redesign review · 10 pages + 1 variant</span>
+  <h1>Engineering Playbook mockups</h1>
+  <p class="lede">One system: blue-black ink, Archivo display / Inter body / JetBrains Mono labels, an IDE frame, and a statusline that renders each page's real frontmatter. Motion is 120–240 ms ease-out, nothing springy.</p>
+
+  <div class="list">
+    <a href="index.html"><span class="n">01</span><span><b>Home</b><small>Display hero, status ledger, section cards, recently-updated feed</small></span><span class="k">landing</span></a>
+    <a href="module-jwt.html"><span class="n">02</span><span><b>Module doc — JWT</b><small>The core reading page: TOC rail, metadata, callouts, code, sources</small></span><span class="k">doc</span></a>
+    <a href="matrix-jwt-vs-sessions.html"><span class="n">03</span><span><b>Decision matrix</b><small>Win/lose colored comparison, verdict callout, numbered migration path</small></span><span class="k">matrix</span></a>
+    <a href="adr-0001.html"><span class="n">04</span><span><b>Decision record — ADR-0001</b><small>Accepted banner, positive/negative consequence cards, way back out</small></span><span class="k">adr</span></a>
+    <a href="checklist-authentication.html"><span class="n">05</span><span><b>Production checklist</b><small>Interactive — progress bar and statusline update as you check items</small></span><span class="k">checklist</span></a>
+    <a href="search.html"><span class="n">06</span><span><b>Command palette</b><small>Ctrl-K search over a dimmed page, grouped hits, keyboard hints</small></span><span class="k">search</span></a>
+    <a href="module-authentication.html"><span class="n">07</span><span><b>Module hub — Authentication</b><small>Coverage bar and a ledger of ten sub-pages with status and sources</small></span><span class="k">hub</span></a>
+    <a href="changelog.html"><span class="n">08</span><span><b>Changelog</b><small>Month-grouped timeline; add / review / edit encoded by color</small></span><span class="k">log</span></a>
+    <a href="research-queue.html"><span class="n">09</span><span><b>Research queue</b><small>The honest list — stubs and stale pages with overdue meters</small></span><span class="k">queue</span></a>
+    <a href="principles.html"><span class="n">10</span><span><b>Principles</b><small>Type-contrast showcase: big display statements, P·01 index, applied-in links</small></span><span class="k">index</span></a>
+    <a href="index-alt.html"><span class="n">+B</span><span><b>Home — variant B</b><small>Alternate direction: mono display voice, terminal prompt hero, denser grid</small></span><span class="k">variant</span></a>
+  </div>
+</div>
+
+<footer class="statusline">
+  <span class="sl-mode">REVIEW</span>
+  <span>mockups/</span>
+  <span>11 files · 1 shared stylesheet</span>
+  <span class="sl-right">pick a direction, then we build</span>
+</footer>
+
+</body>
+</html>

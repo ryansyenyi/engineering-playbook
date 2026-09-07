@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engineering Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/playbook.css">
+<style>
+  .hero { padding: 26px 0 8px; }
+  .hero h1 {
+    font-family: var(--display);
+    font-weight: 650;
+    font-size: clamp(40px, 5.4vw, 66px);
+    line-height: 1.02;
+    letter-spacing: -0.032em;
+    max-width: 17ch;
+    margin: 14px 0 18px;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero .lede { font-size: 16.5px; color: var(--muted); max-width: 56ch; line-height: 1.6; }
+  .ledger {
+    display: flex; gap: 0; margin: 34px 0 44px;
+    border: 1px solid var(--line); border-radius: 10px;
+    background: var(--bg-raise); overflow: hidden;
+  }
+  .ledger > div { flex: 1; padding: 16px 20px; border-right: 1px solid var(--line-soft); }
+  .ledger > div:last-child { border-right: none; }
+  .ledger .n { font-family: var(--mono); font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+  .ledger .n.ok { color: var(--ok); } .ledger .n.warn { color: var(--warn); } .ledger .n.bad { color: var(--bad); }
+  .ledger .label { display: block; margin-top: 2px; }
+  .grid6 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 14px 0 40px; }
+  @media (max-width: 1100px) { .grid6 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .grid6 { grid-template-columns: 1fr; } .ledger { flex-wrap: wrap; } .ledger > div { flex-basis: 50%; } }
+  .moving { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .moving a {
+    display: flex; align-items: center; gap: 14px;
+    padding: 13px 18px; border-bottom: 1px solid var(--line-soft);
+    font-size: 13.5px; color: var(--text-dim);
+    transition: background var(--fast);
+  }
+  .moving a:last-child { border-bottom: none; }
+  .moving a:hover { background: var(--bg-raise); }
+  .moving .when { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--faint); }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <header class="topbar">
+    <a class="wordmark" href="index.html"><span class="mark"></span>Engineering Playbook</a>
+    <button class="search-hint" onclick="location.href='search.html'">Search the playbook… <kbd>Ctrl K</kbd></button>
+  </header>
+
+  <nav class="rail">
+    <span class="label">Playbook</span>
+    <a href="index.html" class="active">Overview</a>
+    <a href="index.html">Principles</a>
+    <a href="module-authentication.html">Architecture library</a>
+    <a href="index.html">Security playbook</a>
+    <a href="adr-0001.html">Decision records</a>
+    <a href="checklist-authentication.html">Checklists</a>
+    <a href="matrix-jwt-vs-sessions.html">Matrices</a>
+    <span class="label">What's moving</span>
+    <a href="changelog.html">Changelog</a>
+    <a href="research-queue.html">Research queue <span class="dot dot--warn"></span></a>
+  </nav>
+
+  <main class="main">
+    <section class="hero rise">
+      <span class="label label--accent">A living architecture playbook</span>
+      <h1>What the options are, why one won, and how to <em>verify it</em> before it ships.</h1>
+      <p class="lede">Implementation guides, decision records, and production checklists — every page carries a review status and its sources, so you know exactly how much to trust it.</p>
+    </section>
+
+    <section class="ledger rise d1" aria-label="Coverage">
+      <div><span class="n">57</span><span class="label">Pages</span></div>
+      <div><span class="n ok">31</span><span class="label">Reviewed</span></div>
+      <div><span class="n warn">14</span><span class="label">Draft</span></div>
+      <div><span class="n bad">12</span><span class="label">Stubs</span></div>
+      <div><span class="n">86</span><span class="label">Sources cited</span></div>
+    </section>
+
+    <span class="label rise d2" style="display:block;margin-bottom:12px">Sections</span>
+    <section class="grid6 rise d2">
+      <a class="card" href="index.html"><span class="label">Principles</span><h3>Commitments</h3><p>The commitments every module is written against.</p></a>
+      <a class="card" href="module-authentication.html"><span class="label">Modules</span><h3>Architecture library</h3><p>Complete implementation guides, module by module.</p></a>
+      <a class="card" href="index.html"><span class="label">Security</span><h3>Security playbook</h3><p>Threats, controls, and verification, mapped to OWASP.</p></a>
+      <a class="card" href="adr-0001.html"><span class="label">ADR</span><h3>Decision records</h3><p>Why one approach won, and the way back out.</p></a>
+      <a class="card" href="checklist-authentication.html"><span class="label">Checklists</span><h3>Production checklists</h3><p>Verification before shipping.</p></a>
+      <a class="card" href="matrix-jwt-vs-sessions.html"><span class="label">Matrices</span><h3>Decision matrices</h3><p>Scored comparisons for choices under time pressure.</p></a>
+    </section>
+
+    <span class="label rise d3" style="display:block;margin-bottom:12px">Recently updated</span>
+    <section class="moving rise d3">
+      <a href="module-jwt.html"><span class="dot dot--ok"></span>JWT — revocation guidance expanded, RFC 8725 added <span class="when">2026-09-07</span></a>
+      <a href="adr-0001.html"><span class="dot dot--ok"></span>ADR-0001 — Use Argon2id for password hashing <span class="when">2026-09-07</span></a>
+      <a href="matrix-jwt-vs-sessions.html"><span class="dot dot--ok"></span>JWT vs session cookies — migration path rewritten <span class="when">2026-09-06</span></a>
+      <a href="checklist-authentication.html"><span class="dot dot--ok"></span>Authentication checklist — breached-password item added <span class="when">2026-09-05</span></a>
+      <a href="research-queue.html"><span class="dot dot--bad"></span>Incident response — still a stub, queued for research <span class="when">2026-08-30</span></a>
+    </section>
+  </main>
+</div>
+
+<footer class="statusline">
+  <span class="sl-mode">PLAYBOOK</span>
+  <span>~/engineering-playbook</span>
+  <span><span class="dot dot--ok"></span>31 reviewed</span>
+  <span><span class="dot dot--warn"></span>14 draft</span>
+  <span><span class="dot dot--bad"></span>12 stub</span>
+  <span class="sl-right">last build 16:32 · main</span>
+</footer>
+
+</body>
+</html>

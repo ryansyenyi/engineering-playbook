@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search · Engineering Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/playbook.css">
+<style>
+  .scrim {
+    position: fixed; inset: 0; z-index: 40;
+    background: rgba(3, 6, 12, 0.72);
+    backdrop-filter: blur(3px);
+    display: flex; justify-content: center; align-items: flex-start;
+    padding: 12vh 20px 0;
+  }
+  .palette {
+    width: 640px; max-width: 100%;
+    background: var(--bg-raise);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 24px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(77,157,255,.08);
+    overflow: hidden;
+    animation: rise 160ms cubic-bezier(.2,0,0,1) both;
+  }
+  .palette .q {
+    display: flex; align-items: center; gap: 12px;
+    padding: 15px 18px; border-bottom: 1px solid var(--line);
+  }
+  .palette .q input {
+    flex: 1; background: none; border: none; outline: none;
+    color: var(--text); font-family: var(--body); font-size: 15px;
+  }
+  .palette .q .caret { color: var(--accent); font-family: var(--mono); font-weight: 700; }
+  .palette .group { padding: 6px 0; }
+  .palette .group + .group { border-top: 1px solid var(--line-soft); }
+  .palette .group .label { display: block; padding: 8px 18px 4px; }
+  .hit {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 18px; font-size: 13.5px; color: var(--text-dim);
+    cursor: pointer;
+    transition: background var(--fast);
+  }
+  .hit:hover, .hit.sel { background: var(--accent-soft); }
+  .hit.sel { box-shadow: inset 2px 0 0 var(--accent); }
+  .hit mark { background: none; color: var(--accent); font-weight: 600; }
+  .hit .path { margin-left: auto; font-family: var(--mono); font-size: 10.5px; color: var(--faint); }
+  .palette .foot {
+    display: flex; gap: 16px; padding: 10px 18px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono); font-size: 10.5px; color: var(--faint);
+  }
+  .palette .foot span { display: flex; gap: 6px; align-items: center; }
+</style>
+</head>
+<body>
+
+<!-- dimmed page behind the palette -->
+<div class="frame" aria-hidden="true" style="filter: saturate(.7)">
+  <header class="topbar">
+    <a class="wordmark" href="index.html"><span class="mark"></span>Engineering Playbook</a>
+  </header>
+  <nav class="rail">
+    <span class="label">Playbook</span>
+    <a href="index.html">Overview</a>
+    <a href="module-authentication.html">Architecture library</a>
+    <a href="adr-0001.html">Decision records</a>
+    <a href="checklist-authentication.html">Checklists</a>
+  </nav>
+  <main class="main">
+    <div class="doc measure">
+      <h1 style="opacity:.5">Engineering Playbook</h1>
+      <p class="lede" style="opacity:.4">A living architecture playbook…</p>
+    </div>
+  </main>
+</div>
+
+<div class="scrim">
+  <div class="palette" role="dialog" aria-label="Search the playbook">
+    <div class="q">
+      <span class="caret">›</span>
+      <input value="revocation" autofocus aria-label="Search query">
+      <kbd>esc</kbd>
+    </div>
+
+    <div class="group">
+      <span class="label">Modules · 3</span>
+      <a class="hit sel" href="module-jwt.html">
+        <span class="dot dot--ok"></span>JWT — "the source of everything hard about <mark>revoking</mark> one"
+        <span class="path">modules/authentication/jwt</span>
+      </a>
+      <a class="hit" href="module-jwt.html">
+        <span class="dot dot--ok"></span>Refresh tokens — <mark>revocation</mark> on rotation reuse detection
+        <span class="path">modules/authentication/refresh-tokens</span>
+      </a>
+      <a class="hit" href="module-jwt.html">
+        <span class="dot dot--warn"></span>OIDC — token <mark>revocation</mark> endpoint (RFC 7009)
+        <span class="path">modules/authentication/oidc</span>
+      </a>
+    </div>
+
+    <div class="group">
+      <span class="label">Matrices · 1</span>
+      <a class="hit" href="matrix-jwt-vs-sessions.html">
+        <span class="dot dot--ok"></span>JWT vs session cookies — "the decision is about <mark>revocation</mark>"
+        <span class="path">matrices/jwt-vs-session-cookies</span>
+      </a>
+    </div>
+
+    <div class="group">
+      <span class="label">Security · 1</span>
+      <a class="hit" href="module-jwt.html">
+        <span class="dot dot--warn"></span>Key rotation — <mark>revoke</mark> compromised keys first, rotate second
+        <span class="path">security/key-rotation</span>
+      </a>
+    </div>
+
+    <div class="foot">
+      <span><kbd>↑↓</kbd> navigate</span>
+      <span><kbd>↵</kbd> open</span>
+      <span><kbd>tab</kbd> filter by section</span>
+      <span style="margin-left:auto">5 results · 12 ms</span>
+    </div>
+  </div>
+</div>
+
+<footer class="statusline">
+  <span class="sl-mode">SEARCH</span>
+  <span>query: "revocation"</span>
+  <span>5 hits across 3 sections</span>
+  <span class="sl-right">index built 16:32</span>
+</footer>
+
+</body>
+</html>

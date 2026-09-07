@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Authentication checklist · Engineering Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/playbook.css">
+<style>
+  .progress {
+    display: flex; align-items: center; gap: 14px;
+    margin: 22px 0 8px; padding: 14px 18px;
+    background: var(--bg-raise); border: 1px solid var(--line); border-radius: 10px;
+  }
+  .progress .bar {
+    flex: 1; height: 5px; border-radius: 99px; background: var(--bg-raise2); overflow: hidden;
+  }
+  .progress .fill { height: 100%; width: 40%; background: var(--accent); border-radius: 99px; transition: width 180ms cubic-bezier(.2,0,0,1); }
+  .progress .n { font-family: var(--mono); font-size: 12px; color: var(--text-dim); white-space: nowrap; }
+  .check .src-link { font-family: var(--mono); font-size: 10.5px; color: var(--accent); }
+</style>
+</head>
+<body>
+
+<div class="frame frame--ctx">
+  <header class="topbar">
+    <a class="wordmark" href="index.html"><span class="mark"></span>Engineering Playbook</a>
+    <nav class="crumbs"><span>checklists</span><span class="sep">/</span><span class="here">authentication</span></nav>
+    <button class="search-hint" onclick="location.href='search.html'">Search the playbook… <kbd>Ctrl K</kbd></button>
+  </header>
+
+  <nav class="rail">
+    <span class="label">Checklists</span>
+    <a href="checklist-authentication.html" class="active">Authentication <span class="dot dot--ok"></span></a>
+    <span class="label">Backing pages</span>
+    <a href="adr-0001.html">ADR-0001 · Argon2id</a>
+    <a href="matrix-jwt-vs-sessions.html">JWT vs session cookies</a>
+    <a href="module-jwt.html">JWT module</a>
+  </nav>
+
+  <main class="main">
+    <article class="doc measure">
+      <div class="kicker rise">
+        <span class="label label--accent">Production checklist · Authentication</span>
+        <span class="status-chip status-chip--ok"><span class="dot dot--ok"></span>Reviewed 2026-09-07</span>
+      </div>
+      <h1 class="rise">Authentication checklist</h1>
+      <p class="lede rise d1">Every item reflects authoritative guidance so the baseline is industry standard rather than opinion. Items with a direct source cite it.</p>
+
+      <div class="progress rise d1" role="status">
+        <div class="bar"><div class="fill" id="fill"></div></div>
+        <span class="n"><b id="done">4</b> / 10 verified</span>
+      </div>
+
+      <h2 class="rise d2">Credential storage</h2>
+      <label class="check rise d2"><input type="checkbox" checked><div>
+        <span class="t">Passwords hashed with Argon2id</span>
+        <div class="why">Memory hardness defeats parallel cracking · <span class="src-link">matrix → password-hashing</span></div>
+      </div></label>
+      <label class="check rise d2"><input type="checkbox" checked><div>
+        <span class="t">Verification stays under 500 ms</span>
+        <div class="why">A login must not become a denial-of-service lever</div>
+      </div></label>
+      <label class="check rise d3"><input type="checkbox"><div>
+        <span class="t">No password length cap below 64 characters</span>
+        <div class="why">Caps push users toward weaker secrets</div>
+      </div></label>
+      <label class="check rise d3"><input type="checkbox"><div>
+        <span class="t">Passwords checked against a breached-password list</span>
+        <div class="why">Reuse is the dominant real-world failure</div>
+      </div></label>
+
+      <h2 class="rise d3">Session handling</h2>
+      <label class="check rise d3"><input type="checkbox" checked><div>
+        <span class="t">Session cookie is <code>HttpOnly</code></span>
+        <div class="why">Script cannot read it, so XSS cannot steal it</div>
+      </div></label>
+      <label class="check rise d4"><input type="checkbox" checked><div>
+        <span class="t">Session cookie is <code>Secure</code></span>
+        <div class="why">Never transmitted over plaintext</div>
+      </div></label>
+      <label class="check rise d4"><input type="checkbox"><div>
+        <span class="t"><code>SameSite=Lax</code> at minimum</span>
+        <div class="why">Blunts cross-site request forgery</div>
+      </div></label>
+      <label class="check rise d4"><input type="checkbox"><div>
+        <span class="t">Session identifier rotated on privilege change</span>
+        <div class="why">Defeats session fixation</div>
+      </div></label>
+      <label class="check rise d5"><input type="checkbox"><div>
+        <span class="t">Logout invalidates server-side state</span>
+        <div class="why">Not just the cookie</div>
+      </div></label>
+      <label class="check rise d5"><input type="checkbox"><div>
+        <span class="t">Idle timeout of 8 hours, absolute timeout of 24</span>
+        <div class="why">A stolen session must age out</div>
+      </div></label>
+    </article>
+  </main>
+
+  <aside class="ctx">
+    <span class="label">Sections</span>
+    <a class="toc active" href="#">Credential storage</a>
+    <a class="toc" href="#">Session handling</a>
+    <span class="label">Metadata</span>
+    <div class="meta-row"><span>Status</span><b style="color:var(--ok)">reviewed</b></div>
+    <div class="meta-row"><span>Reviewed</span><b>2026-09-07</b></div>
+    <div class="meta-row"><span>Items</span><b>10</b></div>
+    <span class="label">Sources</span>
+    <div class="meta-row"><span>OWASP Authentication Cheat Sheet · OWASP Session Management Cheat Sheet</span></div>
+  </aside>
+</div>
+
+<footer class="statusline">
+  <span class="sl-mode">CHECKLIST</span>
+  <span>checklists/authentication.md</span>
+  <span class="ok" id="sl-count">✓ 4/10 verified</span>
+  <span>2 sources</span>
+  <span class="sl-right">export → release notes</span>
+</footer>
+
+<script>
+  const boxes = [...document.querySelectorAll('.check input')];
+  const update = () => {
+    const n = boxes.filter(b => b.checked).length;
+    document.getElementById('done').textContent = n;
+    document.getElementById('fill').style.width = (n / boxes.length * 100) + '%';
+    document.getElementById('sl-count').textContent = `✓ ${n}/${boxes.length} verified`;
+  };
+  boxes.forEach(b => b.addEventListener('change', update));
+  update();
+</script>
+
+</body>
+</html>

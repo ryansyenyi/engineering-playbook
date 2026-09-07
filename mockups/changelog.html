@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Changelog · Engineering Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/playbook.css">
+<style>
+  .month {
+    font-family: var(--display); font-weight: 600; font-size: 19px;
+    letter-spacing: -0.01em; margin: 40px 0 4px;
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  .month .count { font-family: var(--mono); font-size: 11px; color: var(--faint); font-weight: 400; }
+  .log { border-left: 1px solid var(--line); margin: 14px 0 0 5px; padding-left: 0; }
+  .entry {
+    display: grid; grid-template-columns: 92px 84px 1fr; gap: 16px;
+    align-items: baseline;
+    padding: 9px 0 9px 22px;
+    position: relative;
+    font-size: 13.5px; color: var(--text-dim);
+    transition: background var(--fast);
+  }
+  .entry:hover { background: var(--bg-raise); }
+  .entry::before {
+    content: ""; position: absolute; left: -3.5px; top: 16px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--faint);
+  }
+  .entry.is-add::before { background: var(--ok); }
+  .entry.is-review::before { background: var(--accent); }
+  .entry .d { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .entry .kind {
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    letter-spacing: .09em; text-transform: uppercase;
+  }
+  .entry.is-add .kind { color: var(--ok); }
+  .entry.is-review .kind { color: var(--accent); }
+  .entry.is-edit .kind { color: var(--muted); }
+  .entry a { color: var(--text); font-weight: 500; }
+  .entry a:hover { color: var(--accent); }
+  .entry .what { color: var(--muted); }
+  @media (max-width: 700px) { .entry { grid-template-columns: 74px 1fr; } .entry .kind { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <header class="topbar">
+    <a class="wordmark" href="index.html"><span class="mark"></span>Engineering Playbook</a>
+    <nav class="crumbs"><span class="here">changelog</span></nav>
+    <button class="search-hint" onclick="location.href='search.html'">Search the playbook… <kbd>Ctrl K</kbd></button>
+  </header>
+
+  <nav class="rail">
+    <span class="label">What's moving</span>
+    <a href="index.html">Recently updated</a>
+    <a href="changelog.html" class="active">Changelog</a>
+    <a href="research-queue.html">Research queue <span class="dot dot--warn"></span></a>
+    <span class="label">Playbook</span>
+    <a href="index.html">Overview</a>
+    <a href="module-authentication.html">Architecture library</a>
+    <a href="adr-0001.html">Decision records</a>
+  </nav>
+
+  <main class="main">
+    <div class="doc measure">
+      <div class="kicker rise"><span class="label label--accent">Every change, grouped by month</span></div>
+      <h1 class="rise">Changelog</h1>
+      <p class="lede rise d1">The playbook is versioned like code. Additions, reviews, and edits land here so you can see when a page last earned its status.</p>
+
+      <h2 class="month rise d2">September 2026 <span class="count">7 changes</span></h2>
+      <div class="log rise d2">
+        <div class="entry is-review"><span class="d">09-07</span><span class="kind">Review</span><span><a href="module-jwt.html">JWT</a> <span class="what">— revocation guidance expanded, RFC 8725 added as source</span></span></div>
+        <div class="entry is-review"><span class="d">09-07</span><span class="kind">Review</span><span><a href="adr-0001.html">ADR-0001 Argon2id</a> <span class="what">— re-reviewed, no change to decision</span></span></div>
+        <div class="entry is-edit"><span class="d">09-06</span><span class="kind">Edit</span><span><a href="matrix-jwt-vs-sessions.html">JWT vs session cookies</a> <span class="what">— migration path rewritten as four ordered steps</span></span></div>
+        <div class="entry is-add"><span class="d">09-05</span><span class="kind">Add</span><span><a href="checklist-authentication.html">Authentication checklist</a> <span class="what">— breached-password-list item added</span></span></div>
+        <div class="entry is-edit"><span class="d">09-04</span><span class="kind">Edit</span><span><a href="module-jwt.html">Refresh tokens</a> <span class="what">— reuse-detection one-strike rule clarified</span></span></div>
+        <div class="entry is-add"><span class="d">09-02</span><span class="kind">Add</span><span><a href="module-jwt.html">OAuth 2.0</a> <span class="what">— PKCE made mandatory in guidance</span></span></div>
+        <div class="entry is-add"><span class="d">09-01</span><span class="kind">Add</span><span><a href="research-queue.html">Research queue</a> <span class="what">— incident response queued</span></span></div>
+      </div>
+
+      <h2 class="month rise d3">August 2026 <span class="count">5 changes</span></h2>
+      <div class="log rise d3">
+        <div class="entry is-review"><span class="d">08-31</span><span class="kind">Review</span><span><a href="module-jwt.html">OIDC</a> <span class="what">— discovery section reviewed</span></span></div>
+        <div class="entry is-add"><span class="d">08-28</span><span class="kind">Add</span><span><a href="module-jwt.html">Passkeys</a> <span class="what">— first draft published</span></span></div>
+        <div class="entry is-add"><span class="d">08-24</span><span class="kind">Add</span><span><a href="module-jwt.html">Magic link</a> <span class="what">— first draft published</span></span></div>
+        <div class="entry is-edit"><span class="d">08-22</span><span class="kind">Edit</span><span><a href="module-jwt.html">Session cookies</a> <span class="what">— SameSite guidance aligned with checklist</span></span></div>
+        <div class="entry is-add"><span class="d">08-20</span><span class="kind">Add</span><span><a href="module-jwt.html">Social login</a> <span class="what">— first draft published</span></span></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer class="statusline">
+  <span class="sl-mode">LOG</span>
+  <span>changelog.md</span>
+  <span>12 changes · 2 months</span>
+  <span class="sl-right">newest first</span>
+</footer>
+
+</body>
+</html>

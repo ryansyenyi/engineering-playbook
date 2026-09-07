@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01 · Terminal Ink</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#060a12; --panel:#0b111c; --panel2:#101826; --line:#1b2637;
+    --text:#dfe9f7; --dim:#a8b8cd; --muted:#7e90a8; --faint:#52637a;
+    --accent:#4d9dff; --ok:#46c08a; --warn:#e0a44c; --bad:#e06d5b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font:14.5px/1.65 "Inter",sans-serif; -webkit-font-smoothing:antialiased; padding-bottom:30px; }
+  a { color:inherit; text-decoration:none; }
+  .label { font:500 10.5px "JetBrains Mono",monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .top { display:flex; align-items:center; gap:16px; height:50px; padding:0 20px; border-bottom:1px solid var(--line); }
+  .mark { width:18px; height:18px; border-radius:4px; background:linear-gradient(135deg,#4d9dff,#0a58c2); }
+  .wd { display:flex; align-items:center; gap:10px; font:600 13.5px "Archivo",sans-serif; }
+  .crumb { font:11.5px "JetBrains Mono",monospace; color:var(--muted); }
+  .crumb b { color:var(--dim); font-weight:400; }
+  .kbd { margin-left:auto; font:10.5px "JetBrains Mono",monospace; color:var(--dim); background:var(--panel2); border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:1px 6px; }
+  main { max-width:72ch; margin:0 auto; padding:48px 24px 90px; }
+  .kick { display:flex; gap:14px; align-items:center; }
+  .chip { display:inline-flex; gap:6px; align-items:center; font:500 10.5px "JetBrains Mono",monospace; letter-spacing:.08em; text-transform:uppercase; color:var(--ok); background:rgba(70,192,138,.12); border:1px solid rgba(70,192,138,.25); border-radius:99px; padding:3px 10px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:var(--ok); }
+  h1 { font:640 clamp(36px,5vw,54px)/1.04 "Archivo",sans-serif; letter-spacing:-.028em; margin:10px 0 14px; }
+  .lede { font-size:16.5px; color:var(--dim); max-width:60ch; }
+  h2 { font:600 21px "Archivo",sans-serif; letter-spacing:-.015em; margin:42px 0 12px; padding-top:26px; border-top:1px solid #141d2c; }
+  p { margin:12px 0; color:var(--dim); }
+  strong { color:var(--text); }
+  .link { color:var(--accent); border-bottom:1px solid rgba(77,157,255,.35); }
+  pre { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px 18px; margin:16px 0; font:12.5px/1.7 "JetBrains Mono",monospace; color:var(--dim); overflow-x:auto; }
+  pre .c{color:var(--faint)} pre .k{color:var(--accent)} pre .s{color:var(--ok)} pre .n{color:var(--warn)}
+  table { width:100%; border-collapse:collapse; font-size:13px; margin:16px 0; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  th { font:500 10.5px "JetBrains Mono",monospace; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); text-align:left; padding:10px 14px; background:var(--panel); border-bottom:1px solid var(--line); }
+  td { padding:11px 14px; border-bottom:1px solid #141d2c; color:var(--dim); }
+  tr:last-child td { border-bottom:none; }
+  td:first-child { color:var(--text); font-weight:500; }
+  .win{color:var(--ok);font-weight:500} .lose{color:var(--bad)}
+  .sl { position:fixed; inset:auto 0 0 0; height:30px; display:flex; align-items:center; background:var(--panel); border-top:1px solid var(--line); font:11px "JetBrains Mono",monospace; color:var(--muted); }
+  .sl>span { display:inline-flex; align-items:center; gap:7px; padding:0 14px; height:100%; border-right:1px solid #141d2c; }
+  .sl .mode { background:var(--accent); color:#04101f; font-weight:700; letter-spacing:.08em; }
+  .sl .r { margin-left:auto; border-right:none; }
+  .sl .ok { color:var(--ok); }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="wd" href="index.html"><span class="mark"></span>Engineering Playbook</a>
+  <span class="crumb">modules / authentication / <b>jwt</b></span>
+  <span class="kbd">Ctrl K</span>
+</header>
+<main>
+  <div class="kick"><span class="label" style="color:var(--accent)">Module · Authentication</span><span class="chip"><span class="dot"></span>Reviewed 2026-09-07</span></div>
+  <h1>JWT</h1>
+  <p class="lede">A signed, self-contained set of claims a recipient can verify without calling back to the issuer. That stateless property is the entire reason to reach for a JWT — and the source of everything hard about revoking one.</p>
+
+  <h2>When to use</h2>
+  <p>Use a JWT as an <strong>access token for service-to-service calls</strong> where the verifying party should not need a shared session store. Keep lifetimes short: the token is a bearer credential you cannot take back before it expires. For browser-facing applications, prefer a <a class="link" href="#">session cookie</a>.</p>
+
+<pre><span class="c"># verifier configuration — the four checks that matter</span>
+<span class="k">algorithms</span>: [<span class="s">"EdDSA"</span>]          <span class="c"># pinned, never "none"</span>
+<span class="k">issuer</span>:     <span class="s">"https://auth.internal"</span>
+<span class="k">audience</span>:   <span class="s">"orders-api"</span>
+<span class="k">max_ttl</span>:    <span class="n">300</span>                   <span class="c"># seconds — short by default</span></pre>
+
+  <h2>Scored comparison</h2>
+  <table>
+    <thead><tr><th>Criterion</th><th>JWT (stateless)</th><th>Session cookie</th></tr></thead>
+    <tbody>
+      <tr><td>Revocation</td><td class="lose">Hard — valid until expiry</td><td class="win">Easy — delete the session</td></tr>
+      <tr><td>Horizontal scale</td><td class="win">No shared store needed</td><td class="lose">Needs shared session store</td></tr>
+      <tr><td>Logout semantics</td><td class="lose">Needs a denylist</td><td class="win">Immediate</td></tr>
+    </tbody>
+  </table>
+</main>
+<footer class="sl">
+  <span class="mode">REVIEWED</span>
+  <span>modules/authentication/jwt.md</span>
+  <span class="ok">✓ reviewed 2026-09-07</span>
+  <span>4 sources</span>
+  <span class="r">01 · Terminal Ink</span>
+</footer>
+</body>
+</html>

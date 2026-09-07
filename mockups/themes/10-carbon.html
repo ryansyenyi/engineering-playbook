@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10 · Carbon</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#161616; --panel:#1f1f1f; --panel2:#262626; --line:#393939; --line-soft:#2a2a2a;
+    --text:#f4f4f4; --dim:#c6c6c6; --muted:#8d8d8d; --faint:#6f6f6f;
+    --blue:#4589ff; --blue-hard:#0f62fe;
+    --ok:#42be65; --bad:#fa4d56; --warn:#f1c21b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font:14px/1.65 "IBM Plex Sans",sans-serif; -webkit-font-smoothing:antialiased; }
+  a { color:inherit; text-decoration:none; }
+  .top { display:flex; align-items:center; height:48px; border-bottom:1px solid var(--line); }
+  .wd { font-weight:600; font-size:14px; padding:0 20px; }
+  .wd b { font-weight:300; }
+  .nav { display:flex; height:100%; }
+  .nav a { display:flex; align-items:center; padding:0 16px; font-size:13px; color:var(--muted); border-left:1px solid transparent; }
+  .nav a.on { color:var(--text); box-shadow:inset 0 -3px 0 var(--blue-hard); }
+  .kbd { margin-left:auto; margin-right:16px; font:11px "IBM Plex Mono",monospace; color:var(--muted); background:var(--panel2); padding:3px 9px; }
+  main { max-width:880px; margin:0 auto; padding:48px 24px 90px; }
+  .crumb { font:12px "IBM Plex Mono",monospace; color:var(--muted); margin-bottom:22px; }
+  .crumb b { color:var(--blue); font-weight:400; }
+  .tagrow { display:flex; gap:1px; margin:18px 0 26px; }
+  .tag { font:12px "IBM Plex Mono",monospace; background:var(--panel2); color:var(--dim); padding:5px 12px; }
+  .tag.ok { background:#0e3a1e; color:var(--ok); }
+  .tag.mod { background:#0b2a52; color:var(--blue); }
+  h1 { font:300 clamp(38px,5vw,56px)/1.1 "IBM Plex Sans",sans-serif; letter-spacing:0; margin:0 0 14px; }
+  h1 b { font-weight:600; }
+  .lede { font-size:16px; font-weight:300; color:var(--dim); max-width:62ch; }
+  h2 { font:600 18px "IBM Plex Sans",sans-serif; margin:44px 0 12px; padding-left:14px; border-left:3px solid var(--blue-hard); }
+  p { margin:12px 0; color:var(--dim); }
+  strong { color:var(--text); font-weight:600; }
+  .link { color:var(--blue); }
+  .link:hover { text-decoration:underline; }
+  pre { background:var(--panel); border-left:3px solid var(--blue-hard); padding:16px 18px; margin:16px 0; font:12.5px/1.7 "IBM Plex Mono",monospace; color:var(--dim); overflow-x:auto; }
+  pre .c{color:var(--faint)} pre .k{color:var(--blue)} pre .s{color:var(--ok)} pre .n{color:var(--warn)}
+  table { width:100%; border-collapse:collapse; font-size:13.5px; margin:16px 0; }
+  th { font-weight:600; font-size:13px; text-align:left; padding:12px 16px; background:var(--panel2); border-bottom:1px solid var(--line); }
+  td { padding:13px 16px; background:var(--panel); border-bottom:1px solid var(--line-soft); color:var(--dim); }
+  tbody tr:hover td { background:var(--panel2); }
+  td:first-child { color:var(--text); font-weight:500; }
+  .win{color:var(--ok)} .lose{color:var(--bad)}
+  .foot { margin-top:40px; border-top:1px solid var(--line); padding-top:14px; display:flex; gap:24px; font:11.5px "IBM Plex Mono",monospace; color:var(--muted); }
+  .foot .r { margin-left:auto; color:var(--blue); }
+  @media (max-width:720px){ .nav{display:none} }
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="wd">Playbook <b>· Engineering</b></span>
+  <nav class="nav">
+    <a href="#">Principles</a>
+    <a href="#" class="on">Modules</a>
+    <a href="#">Security</a>
+    <a href="#">Decisions</a>
+    <a href="#">Checklists</a>
+  </nav>
+  <span class="kbd">Ctrl+K</span>
+</header>
+<main>
+  <div class="crumb">modules / authentication / <b>jwt</b></div>
+  <h1><b>JWT</b> — JSON Web Token</h1>
+  <p class="lede">A signed, self-contained set of claims a recipient can verify without calling back to the issuer. That stateless property is the entire reason to reach for a JWT — and the source of everything hard about revoking one.</p>
+  <div class="tagrow">
+    <span class="tag mod">authentication</span>
+    <span class="tag ok">✓ reviewed 2026-09-07</span>
+    <span class="tag">4 sources</span>
+    <span class="tag">RFC 7519</span>
+  </div>
+
+  <h2>When to use</h2>
+  <p>Use a JWT as an <strong>access token for service-to-service calls</strong> where the verifying party should not need a shared session store. Keep lifetimes short: the token is a bearer credential you cannot take back before it expires. For browser-facing applications, prefer a <a class="link" href="#">session cookie</a>.</p>
+
+<pre><span class="c"># verifier configuration — the four checks that matter</span>
+<span class="k">algorithms</span>: [<span class="s">"EdDSA"</span>]          <span class="c"># pinned, never "none"</span>
+<span class="k">issuer</span>:     <span class="s">"https://auth.internal"</span>
+<span class="k">audience</span>:   <span class="s">"orders-api"</span>
+<span class="k">max_ttl</span>:    <span class="n">300</span>                   <span class="c"># seconds — short by default</span></pre>
+
+  <h2>Scored comparison</h2>
+  <table>
+    <thead><tr><th>Criterion</th><th>JWT (stateless)</th><th>Session cookie</th></tr></thead>
+    <tbody>
+      <tr><td>Revocation</td><td class="lose">Hard — valid until expiry</td><td class="win">Easy — delete the session</td></tr>
+      <tr><td>Horizontal scale</td><td class="win">No shared store needed</td><td class="lose">Needs shared session store</td></tr>
+      <tr><td>Logout semantics</td><td class="lose">Needs a denylist</td><td class="win">Immediate</td></tr>
+    </tbody>
+  </table>
+
+  <footer class="foot">
+    <span>jwt.md</span><span>reviewed</span><span>4 sources</span>
+    <span class="r">10 · Carbon — IBM Plex, sharp, data-dense</span>
+  </footer>
+</main>
+</body>
+</html>

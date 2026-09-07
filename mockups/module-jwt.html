@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JWT · Engineering Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/playbook.css">
+<style>
+  .src {
+    display: flex; align-items: baseline; gap: 10px;
+    padding: 9px 0; border-bottom: 1px solid var(--line-soft);
+    font-size: 13px; color: var(--text-dim);
+  }
+  .src:last-child { border-bottom: none; }
+  .src .type { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); flex: none; width: 64px; }
+</style>
+</head>
+<body>
+
+<div class="frame frame--ctx">
+  <header class="topbar">
+    <a class="wordmark" href="index.html"><span class="mark"></span>Engineering Playbook</a>
+    <nav class="crumbs"><span>modules</span><span class="sep">/</span><span>authentication</span><span class="sep">/</span><span class="here">jwt</span></nav>
+    <button class="search-hint" onclick="location.href='search.html'">Search the playbook… <kbd>Ctrl K</kbd></button>
+  </header>
+
+  <nav class="rail">
+    <span class="label">Authentication</span>
+    <div class="nest">
+      <a href="module-jwt.html">Email + password <span class="dot dot--ok"></span></a>
+      <a href="module-jwt.html" class="active">JWT <span class="dot dot--ok"></span></a>
+      <a href="module-jwt.html">OAuth 2.0 <span class="dot dot--ok"></span></a>
+      <a href="module-jwt.html">OIDC <span class="dot dot--warn"></span></a>
+      <a href="module-jwt.html">Passkeys <span class="dot dot--warn"></span></a>
+      <a href="module-jwt.html">Session cookies <span class="dot dot--ok"></span></a>
+      <a href="module-jwt.html">Refresh tokens <span class="dot dot--ok"></span></a>
+      <a href="module-jwt.html">Magic link <span class="dot dot--warn"></span></a>
+      <a href="module-jwt.html">Enterprise SSO <span class="dot dot--bad"></span></a>
+      <a href="module-jwt.html">Social login <span class="dot dot--warn"></span></a>
+    </div>
+    <span class="label">Related</span>
+    <a href="matrix-jwt-vs-sessions.html">JWT vs session cookies</a>
+    <a href="checklist-authentication.html">Auth checklist</a>
+    <a href="adr-0001.html">ADR-0001 · Argon2id</a>
+  </nav>
+
+  <main class="main">
+    <article class="doc measure">
+      <div class="kicker rise">
+        <span class="label label--accent">Module · Authentication</span>
+        <span class="status-chip status-chip--ok"><span class="dot dot--ok"></span>Reviewed 2026-09-07</span>
+      </div>
+      <h1 class="rise">JWT</h1>
+      <p class="lede rise d1">A signed, self-contained set of claims a recipient can verify without calling back to the issuer. That stateless property is the entire reason to reach for a JWT — and the source of everything hard about revoking one.</p>
+
+      <h2 id="when" class="rise d2">When to use</h2>
+      <p>Use a JWT as an <strong>access token for service-to-service calls</strong> or API access where the verifying party should not need a shared session store. Keep lifetimes short: the token is a bearer credential you cannot take back before it expires.</p>
+      <p>For browser-facing applications, prefer a session cookie. The comparison is scored in <a class="link" href="matrix-jwt-vs-sessions.html">JWT vs session cookies</a>.</p>
+
+      <div class="callout callout--warn rise d2">
+        <span class="bar"></span>
+        <div class="body"><span class="label">Revocation</span>
+        A JWT is valid until it expires. If you find yourself building a denylist to log tokens out, you have rebuilt the session store you were avoiding — with worse ergonomics. Shorten the lifetime instead.</div>
+      </div>
+
+      <h2 id="implementation">Implementation guidance</h2>
+      <p>Follow <a class="link" href="#refs">RFC 8725</a> best current practices. Pin the algorithm at the verifier; never accept the token's own <code>alg</code> header as authority.</p>
+
+<pre><span class="c"># verifier configuration — the four checks that matter</span>
+<span class="k">algorithms</span>: [<span class="s">"EdDSA"</span>]          <span class="c"># pinned, never "none"</span>
+<span class="k">issuer</span>:     <span class="s">"https://auth.internal"</span>
+<span class="k">audience</span>:   <span class="s">"orders-api"</span>          <span class="c"># reject tokens minted for another service</span>
+<span class="k">max_ttl</span>:    <span class="n">300</span>                   <span class="c"># seconds — short by default</span></pre>
+
+      <ul>
+        <li>Validate <code>iss</code>, <code>aud</code>, <code>exp</code>, and <code>nbf</code> on every request — a missing check is a bypass.</li>
+        <li>Sign with an asymmetric key (EdDSA or ES256) so services verify without holding a signing secret.</li>
+        <li>Never put a JWT in <code>localStorage</code> — XSS exposure is the top real-world failure.</li>
+      </ul>
+
+      <h2 id="verification">Verification</h2>
+      <p>Before shipping, prove the verifier rejects: a token signed with <code>none</code>, an expired token, a wrong-audience token, and a token signed by a rotated-out key. Four requests, four <code>401</code>s.</p>
+
+      <h2 id="refs">References</h2>
+      <div class="rise">
+        <div class="src"><span class="type">RFC</span>RFC 7519 — JSON Web Token (JWT)</div>
+        <div class="src"><span class="type">RFC</span>RFC 8725 — JSON Web Token Best Current Practices</div>
+        <div class="src"><span class="type">Standard</span>OWASP JSON Web Token Cheat Sheet</div>
+        <div class="src"><span class="type">Vendor</span>GitHub Docs — Managing your personal access tokens</div>
+      </div>
+    </article>
+  </main>
+
+  <aside class="ctx">
+    <span class="label">On this page</span>
+    <a class="toc active" href="#when">When to use</a>
+    <a class="toc" href="#implementation">Implementation guidance</a>
+    <a class="toc" href="#verification">Verification</a>
+    <a class="toc" href="#refs">References</a>
+    <span class="label">Metadata</span>
+    <div class="meta-row"><span>Status</span><b style="color:var(--ok)">reviewed</b></div>
+    <div class="meta-row"><span>Reviewed</span><b>2026-09-07</b></div>
+    <div class="meta-row"><span>Module</span><b>authentication</b></div>
+    <div class="meta-row"><span>Sources</span><b>4</b></div>
+    <span class="label">Tags</span>
+    <div class="meta-row"><span style="font-family:var(--mono);font-size:11px">Authentication · JWT · Tokens</span></div>
+  </aside>
+</div>
+
+<footer class="statusline">
+  <span class="sl-mode">REVIEWED</span>
+  <span>modules/authentication/jwt.md</span>
+  <span class="ok">✓ reviewed 2026-09-07</span>
+  <span>4 sources</span>
+  <span class="sl-right">Ln 214 · 10.2 KB</span>
+</footer>
+
+</body>
+</html>

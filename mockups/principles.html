@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Principles · Engineering Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/playbook.css">
+<style>
+  .principle {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 28px;
+    padding: 34px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .principle:last-child { border-bottom: none; }
+  .principle .tag {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent); padding-top: 10px;
+  }
+  .principle h2 {
+    font-family: var(--display);
+    font-weight: 650;
+    font-size: clamp(24px, 3.2vw, 38px);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    margin: 0 0 10px; padding: 0; border: none;
+  }
+  .principle h2 a { transition: color var(--fast); }
+  .principle h2 a:hover { color: var(--accent); }
+  .principle p { margin: 0; max-width: 60ch; color: var(--muted); font-size: 14px; }
+  .principle .applied { margin-top: 10px; font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .principle .applied a { color: var(--text-dim); border-bottom: 1px dotted var(--faint); }
+  .principle .applied a:hover { color: var(--accent); border-color: var(--accent); }
+  @media (max-width: 700px) { .principle { grid-template-columns: 1fr; gap: 8px; } .principle .tag { padding-top: 0; } }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <header class="topbar">
+    <a class="wordmark" href="index.html"><span class="mark"></span>Engineering Playbook</a>
+    <nav class="crumbs"><span class="here">principles</span></nav>
+    <button class="search-hint" onclick="location.href='search.html'">Search the playbook… <kbd>Ctrl K</kbd></button>
+  </header>
+
+  <nav class="rail">
+    <span class="label">Playbook</span>
+    <a href="index.html">Overview</a>
+    <a href="principles.html" class="active">Principles</a>
+    <a href="module-authentication.html">Architecture library</a>
+    <a href="adr-0001.html">Decision records</a>
+    <a href="checklist-authentication.html">Checklists</a>
+    <a href="matrix-jwt-vs-sessions.html">Matrices</a>
+  </nav>
+
+  <main class="main">
+    <div class="doc" style="max-width: 780px">
+      <div class="kicker rise"><span class="label label--accent">The commitments every module is written against</span></div>
+      <h1 class="rise">Principles</h1>
+      <p class="lede rise d1">Nine commitments. Every module cites the ones it serves; every decision record explains which one it traded away and why.</p>
+
+      <div class="rise d2">
+        <div class="principle">
+          <span class="tag">P·01</span>
+          <div>
+            <h2><a href="#">Security first.</a></h2>
+            <p>The secure path is the default path. Anything else is an exception with an owner and an expiry date.</p>
+            <span class="applied">applied in: <a href="module-jwt.html">jwt</a> · <a href="checklist-authentication.html">auth-checklist</a> · <a href="adr-0001.html">adr-0001</a></span>
+          </div>
+        </div>
+        <div class="principle">
+          <span class="tag">P·02</span>
+          <div>
+            <h2><a href="#">Least privilege.</a></h2>
+            <p>Every credential, token, and role carries the minimum it needs. Scope creep is a bug, not a convenience.</p>
+            <span class="applied">applied in: <a href="module-jwt.html">oauth2</a> · <a href="module-jwt.html">refresh-tokens</a></span>
+          </div>
+        </div>
+        <div class="principle">
+          <span class="tag">P·03</span>
+          <div>
+            <h2><a href="#">Defense in depth.</a></h2>
+            <p>No single control is trusted to hold. Each layer assumes the one above it has already failed.</p>
+            <span class="applied">applied in: <a href="checklist-authentication.html">auth-checklist</a> · <a href="#">secure-headers</a></span>
+          </div>
+        </div>
+        <div class="principle">
+          <span class="tag">P·04</span>
+          <div>
+            <h2><a href="#">API first.</a></h2>
+            <p>The contract is designed before the implementation. Breaking a published contract requires a decision record.</p>
+            <span class="applied">applied in: <a href="#">api-design</a></span>
+          </div>
+        </div>
+        <div class="principle">
+          <span class="tag">P·05</span>
+          <div>
+            <h2><a href="#">Twelve-factor.</a></h2>
+            <p>Config in the environment, backing services attached, processes stateless. Boring on purpose.</p>
+            <span class="applied">applied in: <a href="#">cloud-native</a> · <a href="#">observability</a></span>
+          </div>
+        </div>
+        <div class="principle">
+          <span class="tag">P·06</span>
+          <div>
+            <h2><a href="#">Multi-tenant by design.</a></h2>
+            <p>Tenancy is decided at the schema, not patched at the query. Isolation is provable, not assumed.</p>
+            <span class="applied">applied in: <a href="#">multi-tenancy</a> · <a href="#">database-design</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer class="statusline">
+  <span class="sl-mode">PRINCIPLES</span>
+  <span>principles/</span>
+  <span class="ok">✓ 9 commitments</span>
+  <span class="sl-right">cited by 41 pages</span>
+</footer>
+
+</body>
+</html>

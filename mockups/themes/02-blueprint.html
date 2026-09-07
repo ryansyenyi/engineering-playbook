@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02 · Blueprint</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a1e4a; --bg2:#0c2354; --line:rgba(127,209,255,.28); --line-soft:rgba(127,209,255,.14);
+    --grid:rgba(127,209,255,.06);
+    --text:#eaf4ff; --dim:#b9d4ef; --muted:#7fa8d4; --cyan:#7fd1ff; --white:#ffffff;
+    --warn:#ffd27f; --bad:#ff9d8a;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:var(--bg);
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+    color:var(--text); font:14.5px/1.68 "IBM Plex Sans",sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  a { color:inherit; text-decoration:none; }
+  .sheet { max-width:860px; margin:36px auto 60px; border:1.5px solid var(--line); background:var(--bg2); position:relative; }
+  .sheet::after { content:""; position:absolute; inset:6px; border:1px dashed var(--line-soft); pointer-events:none; }
+  .label { font:500 10px "IBM Plex Mono",monospace; letter-spacing:.14em; text-transform:uppercase; color:var(--cyan); }
+  .top { display:flex; align-items:center; gap:18px; padding:14px 28px; border-bottom:1.5px solid var(--line); position:relative; z-index:1; }
+  .wd { font:700 13px "IBM Plex Mono",monospace; letter-spacing:.06em; text-transform:uppercase; }
+  .crumb { font:11px "IBM Plex Mono",monospace; color:var(--muted); }
+  .sheetno { margin-left:auto; font:11px "IBM Plex Mono",monospace; color:var(--muted); }
+  main { padding:44px 48px 40px; position:relative; z-index:1; }
+  h1 { font:700 clamp(38px,5vw,58px)/1.02 "IBM Plex Sans",sans-serif; letter-spacing:-.01em; text-transform:uppercase; margin:12px 0 6px; }
+  h1 small { display:block; font:400 12px "IBM Plex Mono",monospace; letter-spacing:.3em; color:var(--cyan); margin-bottom:8px; }
+  .lede { font-size:16px; color:var(--dim); max-width:58ch; margin-top:10px; }
+  .rev { display:inline-block; margin-top:16px; font:700 10.5px "IBM Plex Mono",monospace; letter-spacing:.12em; text-transform:uppercase; color:var(--bg); background:var(--cyan); padding:4px 12px; }
+  h2 { font:600 13px "IBM Plex Mono",monospace; letter-spacing:.18em; text-transform:uppercase; color:var(--cyan); margin:40px 0 12px; display:flex; align-items:center; gap:14px; }
+  h2::after { content:""; flex:1; height:1px; background:var(--line-soft); }
+  p { margin:12px 0; color:var(--dim); }
+  strong { color:var(--white); }
+  .link { color:var(--cyan); border-bottom:1px dotted var(--cyan); }
+  pre { border:1px solid var(--line); background:rgba(4,12,32,.55); padding:16px 18px; margin:16px 0; font:12.5px/1.7 "IBM Plex Mono",monospace; color:var(--dim); overflow-x:auto; }
+  pre .c{color:var(--muted)} pre .k{color:var(--cyan)} pre .s{color:var(--white)} pre .n{color:var(--warn)}
+  table { width:100%; border-collapse:collapse; font-size:13px; margin:16px 0; border:1px solid var(--line); }
+  th { font:500 10px "IBM Plex Mono",monospace; letter-spacing:.12em; text-transform:uppercase; color:var(--cyan); text-align:left; padding:10px 14px; border:1px solid var(--line-soft); background:rgba(4,12,32,.4); }
+  td { padding:11px 14px; border:1px solid var(--line-soft); color:var(--dim); }
+  td:first-child { color:var(--white); font-weight:500; }
+  .win{color:var(--cyan);font-weight:600} .lose{color:var(--bad)}
+  .tblock { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; border-top:1.5px solid var(--line); font:11px "IBM Plex Mono",monospace; position:relative; z-index:1; }
+  .tblock div { padding:10px 16px; border-right:1px solid var(--line-soft); }
+  .tblock div:last-child { border-right:none; }
+  .tblock .label { display:block; margin-bottom:2px; }
+  .tblock b { color:var(--text); font-weight:500; }
+  @media (max-width:720px){ .tblock{grid-template-columns:1fr 1fr} main{padding:32px 24px} }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header class="top">
+    <span class="wd">⌖ Engineering Playbook</span>
+    <span class="crumb">DWG · modules/authentication/jwt</span>
+    <span class="sheetno">SHEET 07 / 57</span>
+  </header>
+  <main>
+    <h1><small>Module — Authentication</small>JWT</h1>
+    <span class="rev">✓ Reviewed · 2026-09-07</span>
+    <p class="lede">A signed, self-contained set of claims a recipient can verify without calling back to the issuer. That stateless property is the entire reason to reach for a JWT — and the source of everything hard about revoking one.</p>
+
+    <h2>01 — When to use</h2>
+    <p>Use a JWT as an <strong>access token for service-to-service calls</strong> where the verifying party should not need a shared session store. Keep lifetimes short: the token is a bearer credential you cannot take back before it expires. For browser-facing applications, prefer a <a class="link" href="#">session cookie</a>.</p>
+
+    <h2>02 — Verifier specification</h2>
+<pre><span class="c"># the four checks that matter</span>
+<span class="k">algorithms</span>: [<span class="s">"EdDSA"</span>]          <span class="c"># pinned, never "none"</span>
+<span class="k">issuer</span>:     <span class="s">"https://auth.internal"</span>
+<span class="k">audience</span>:   <span class="s">"orders-api"</span>
+<span class="k">max_ttl</span>:    <span class="n">300</span>                   <span class="c"># seconds — short by default</span></pre>
+
+    <h2>03 — Scored comparison</h2>
+    <table>
+      <thead><tr><th>Criterion</th><th>JWT (stateless)</th><th>Session cookie</th></tr></thead>
+      <tbody>
+        <tr><td>Revocation</td><td class="lose">Hard — valid until expiry</td><td class="win">Easy — delete the session</td></tr>
+        <tr><td>Horizontal scale</td><td class="win">No shared store needed</td><td class="lose">Needs shared session store</td></tr>
+        <tr><td>Logout semantics</td><td class="lose">Needs a denylist</td><td class="win">Immediate</td></tr>
+      </tbody>
+    </table>
+  </main>
+  <footer class="tblock">
+    <div><span class="label">Status</span><b>REVIEWED</b></div>
+    <div><span class="label">Reviewed</span><b>2026-09-07</b></div>
+    <div><span class="label">Sources</span><b>RFC 7519 · RFC 8725 · OWASP</b></div>
+    <div><span class="label">Theme</span><b>02 · Blueprint</b></div>
+  </footer>
+</div>
+</body>
+</html>

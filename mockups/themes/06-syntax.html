@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06 · Syntax</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0d1117; --panel:#131a23; --line-hard:#212c37;
+    --text:#e6edf3; --dim:#b7c2cd; --muted:#768390; --faint:#4d5866;
+    --blue:#79c0ff; --purple:#d2a8ff; --cyan:#76e3ea; --orange:#ffa657; --green:#7ee787; --red:#ff7b72;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font:14px/1.7 "Inter",sans-serif; -webkit-font-smoothing:antialiased; padding-bottom:30px; }
+  a { color:inherit; text-decoration:none; }
+  .top { display:flex; align-items:center; height:44px; border-bottom:1px solid var(--line-hard); font:12px "JetBrains Mono",monospace; }
+  .tab { display:flex; align-items:center; gap:9px; padding:0 18px; height:100%; border-right:1px solid var(--line-hard); color:var(--muted); }
+  .tab.on { color:var(--text); background:var(--panel); box-shadow:inset 0 2px 0 var(--blue); }
+  .tab .ico { color:var(--blue); }
+  .kbd { margin-left:auto; margin-right:16px; color:var(--muted); border:1px solid var(--line-hard); border-radius:4px; padding:1px 7px; font-size:10.5px; }
+  .editor { display:grid; grid-template-columns:56px 1fr; max-width:920px; margin:0 auto; }
+  .gutter { text-align:right; padding:44px 14px 90px 0; font:12px/1.7 "JetBrains Mono",monospace; color:var(--faint); user-select:none; border-right:1px solid var(--line-hard); }
+  .gutter i { display:block; font-style:normal; }
+  .gutter i.bp { color:var(--red); }
+  main { padding:44px 40px 90px 32px; min-width:0; }
+  .fm { font:12.5px/1.8 "JetBrains Mono",monospace; color:var(--muted); margin-bottom:26px; }
+  .fm .d { color:var(--faint); }
+  .fm .k { color:var(--purple); }
+  .fm .s { color:var(--cyan); }
+  .fm .g { color:var(--green); }
+  h1 { font:800 clamp(34px,4.6vw,50px)/1.05 "JetBrains Mono",monospace; letter-spacing:-.04em; margin:6px 0 14px; }
+  h1 .h { color:var(--blue); }
+  .lede { font-size:15.5px; color:var(--dim); max-width:60ch; }
+  h2 { font:700 15px "JetBrains Mono",monospace; letter-spacing:-.01em; margin:42px 0 10px; color:var(--purple); }
+  h2::before { content:"fn "; color:var(--faint); font-weight:400; }
+  h2::after { content:"()"; color:var(--faint); font-weight:400; }
+  p { margin:11px 0; color:var(--dim); }
+  strong { color:var(--text); font-weight:600; }
+  .link { color:var(--blue); text-decoration:underline; text-underline-offset:3px; text-decoration-color:rgba(121,192,255,.4); }
+  pre { background:var(--panel); border:1px solid var(--line-hard); border-radius:8px; padding:16px 18px; margin:16px 0; font:12.5px/1.7 "JetBrains Mono",monospace; color:var(--dim); overflow-x:auto; }
+  pre .c{color:var(--faint)} pre .k{color:var(--purple)} pre .s{color:var(--cyan)} pre .n{color:var(--orange)}
+  table { width:100%; border-collapse:collapse; font-size:13px; margin:16px 0; border:1px solid var(--line-hard); border-radius:8px; overflow:hidden; }
+  th { font:500 11px "JetBrains Mono",monospace; letter-spacing:.06em; color:var(--orange); text-align:left; padding:9px 14px; background:var(--panel); border-bottom:1px solid var(--line-hard); }
+  td { padding:11px 14px; border-bottom:1px solid #1a232e; color:var(--dim); }
+  tr:last-child td { border-bottom:none; }
+  td:first-child { color:var(--text); font-weight:500; }
+  .win{color:var(--green)} .lose{color:var(--red)}
+  .sl { position:fixed; inset:auto 0 0 0; height:30px; display:flex; align-items:center; background:var(--panel); border-top:1px solid var(--line-hard); font:11px "JetBrains Mono",monospace; color:var(--muted); }
+  .sl>span { padding:0 14px; height:100%; display:inline-flex; align-items:center; gap:7px; border-right:1px solid #1a232e; }
+  .sl .mode { background:var(--blue); color:#0d1117; font-weight:800; letter-spacing:.06em; }
+  .sl .r { margin-left:auto; border-right:none; }
+  .sl .g { color:var(--green); }
+  @media (max-width:720px){ .editor{grid-template-columns:1fr} .gutter{display:none} main{padding:36px 22px 80px} }
+</style>
+</head>
+<body>
+<header class="top">
+  <span class="tab on"><span class="ico">◆</span>jwt.md</span>
+  <span class="tab">session-cookies.md</span>
+  <span class="tab">refresh-tokens.md</span>
+  <span class="kbd">Ctrl P</span>
+</header>
+<div class="editor">
+  <aside class="gutter" aria-hidden="true">
+    <i>1</i><i>2</i><i>3</i><i class="bp">●4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i><i>10</i><i>11</i><i>12</i><i>13</i><i>14</i><i>15</i><i>16</i><i>17</i><i>18</i><i>19</i><i>20</i><i>21</i><i>22</i><i>23</i><i>24</i><i>25</i><i>26</i><i>27</i><i>28</i>
+  </aside>
+  <main>
+    <div class="fm"><span class="d">---</span><br><span class="k">module</span>: <span class="s">authentication</span> · <span class="k">status</span>: <span class="g">reviewed</span> · <span class="k">reviewed</span>: <span class="s">2026-09-07</span> · <span class="k">sources</span>: <span class="s">4</span><br><span class="d">---</span></div>
+    <h1><span class="h">#</span> JWT</h1>
+    <p class="lede">A signed, self-contained set of claims a recipient can verify without calling back to the issuer. That stateless property is the entire reason to reach for a JWT — and the source of everything hard about revoking one.</p>
+
+    <h2>when_to_use</h2>
+    <p>Use a JWT as an <strong>access token for service-to-service calls</strong> where the verifying party should not need a shared session store. Keep lifetimes short: the token is a bearer credential you cannot take back before it expires. For browser-facing applications, prefer a <a class="link" href="#">session cookie</a>.</p>
+
+<pre><span class="c"># verifier configuration — the four checks that matter</span>
+<span class="k">algorithms</span>: [<span class="s">"EdDSA"</span>]          <span class="c"># pinned, never "none"</span>
+<span class="k">issuer</span>:     <span class="s">"https://auth.internal"</span>
+<span class="k">audience</span>:   <span class="s">"orders-api"</span>
+<span class="k">max_ttl</span>:    <span class="n">300</span>                   <span class="c"># seconds — short by default</span></pre>
+
+    <h2>scored_comparison</h2>
+    <table>
+      <thead><tr><th>criterion</th><th>jwt_stateless</th><th>session_cookie</th></tr></thead>
+      <tbody>
+        <tr><td>Revocation</td><td class="lose">Hard — valid until expiry</td><td class="win">Easy — delete the session</td></tr>
+        <tr><td>Horizontal scale</td><td class="win">No shared store needed</td><td class="lose">Needs shared session store</td></tr>
+        <tr><td>Logout semantics</td><td class="lose">Needs a denylist</td><td class="win">Immediate</td></tr>
+      </tbody>
+    </table>
+  </main>
+</div>
+<footer class="sl">
+  <span class="mode">MD</span>
+  <span>modules/authentication/jwt.md</span>
+  <span class="g">✓ reviewed 2026-09-07</span>
+  <span>Ln 4, Col 1</span>
+  <span class="r">06 · Syntax — editor-theme, multi-hue tokens</span>
+</footer>
+</body>
+</html>

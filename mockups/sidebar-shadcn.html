@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sidebar mockup v2 · shadcn anatomy × Terminal Ink</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#060a12; --panel:#0b111c; --panel2:#101826; --line:#1b2637; --line-soft:#141d2c;
+    --text:#dfe9f7; --dim:#a8b8cd; --muted:#7e90a8; --faint:#52637a;
+    --accent:#4d9dff; --accent-soft:rgba(77,157,255,.12);
+    --ok:#46c08a; --warn:#e0a44c; --bad:#e06d5b;
+    --sb-w:16rem; --sb-w-icon:3.25rem;
+    --fast:120ms cubic-bezier(.2,0,0,1);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font:14px/1.6 "Inter",sans-serif; -webkit-font-smoothing:antialiased; }
+  a { color:inherit; text-decoration:none; }
+  .app { display:flex; min-height:100vh; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width:var(--sb-w); flex:none;
+    display:flex; flex-direction:column;
+    background:var(--panel);
+    border-right:1px solid var(--line);
+    height:100vh; position:sticky; top:0;
+    transition:width 180ms cubic-bezier(.2,0,0,1), transform 200ms cubic-bezier(.2,0,0,1);
+    overflow:hidden;
+  }
+  .app[data-collapsed] .sidebar { width:var(--sb-w-icon); }
+
+  .sb-header { padding:10px 10px 12px; border-bottom:1px solid var(--line-soft); display:flex; flex-direction:column; gap:8px; }
+  .sb-brand {
+    display:flex; align-items:center; gap:10px;
+    padding:5px 6px; border-radius:8px; cursor:pointer;
+    transition:background var(--fast); min-height:36px;
+  }
+  .sb-brand:hover { background:var(--panel2); }
+  .sb-brand .mark { width:24px; height:24px; border-radius:6px; flex:none;
+    background:linear-gradient(135deg,var(--accent),#0a58c2);
+    display:flex; align-items:center; justify-content:center;
+    font:700 11px "JetBrains Mono",monospace; color:#04101f; }
+  .sb-brand .t { min-width:0; overflow:hidden; }
+  .sb-brand .t b { display:block; font:600 13px "Archivo",sans-serif; letter-spacing:-.01em; white-space:nowrap; }
+  .sb-brand .t small { display:block; font:10.5px "JetBrains Mono",monospace; color:var(--faint); white-space:nowrap; }
+
+  /* search: full width of sidebar padding box; collapses to icon button */
+  .sb-search {
+    display:flex; align-items:center; gap:8px; width:100%;
+    height:34px; padding:0 10px; border-radius:8px;
+    background:var(--bg); border:1px solid var(--line);
+    color:var(--muted); font:inherit; font-size:12.5px; cursor:pointer;
+    transition:border-color var(--fast); white-space:nowrap; overflow:hidden;
+  }
+  .sb-search:hover, .sb-search:focus-visible { border-color:var(--accent); outline:none; }
+  .sb-search .si { flex:none; font-size:12px; }
+  .sb-search .lbl { flex:1; text-align:left; overflow:hidden; text-overflow:ellipsis; }
+  .sb-search kbd { flex:none; font:10px "JetBrains Mono",monospace; color:var(--faint); border:1px solid var(--line); border-radius:4px; padding:1px 5px; }
+  .app[data-collapsed] .sb-brand { padding:5px 0; justify-content:center; }
+  .app[data-collapsed] .sb-brand .t { display:none; }
+  .app[data-collapsed] .sb-search { width:34px; padding:0; justify-content:center; }
+  .app[data-collapsed] .sb-search .lbl, .app[data-collapsed] .sb-search kbd { display:none; }
+
+  .sb-content { flex:1; overflow-y:auto; overflow-x:hidden; padding:8px 10px 12px; scrollbar-width:thin; scrollbar-color:var(--line) transparent; }
+
+  .sb-group { padding:8px 0 2px; }
+  .sb-group + .sb-group { border-top:1px solid var(--line-soft); margin-top:6px; }
+  .sb-label {
+    display:block; padding:6px 8px 4px;
+    font:500 10px "JetBrains Mono",monospace; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--faint); white-space:nowrap;
+    transition:opacity var(--fast);
+  }
+  .app[data-collapsed] .sb-label { opacity:0; height:0; padding:0; overflow:hidden; }
+
+  .sb-item { position:relative; }
+  .sb-btn {
+    display:flex; align-items:center; gap:10px; width:100%;
+    height:32px; padding:0 8px; border-radius:8px; border:none; background:none;
+    color:var(--dim); font:500 13px "Inter",sans-serif; text-align:left; cursor:pointer;
+    transition:background var(--fast), color var(--fast);
+    white-space:nowrap;
+  }
+  .sb-btn:hover { background:var(--panel2); color:var(--text); }
+  .sb-btn:focus-visible { outline:2px solid var(--accent); outline-offset:-2px; }
+  .sb-btn[data-active] { background:var(--accent-soft); color:var(--accent); }
+  .sb-btn .ico { width:16px; height:16px; flex:none; display:inline-flex; align-items:center; justify-content:center; font-size:13px; color:var(--muted); }
+  .sb-btn[data-active] .ico { color:var(--accent); }
+  .sb-btn .lbl { flex:1; overflow:hidden; text-overflow:ellipsis; }
+  .app[data-collapsed] .sb-btn { justify-content:center; padding:0; }
+  .app[data-collapsed] .sb-btn .lbl, .app[data-collapsed] .sb-badge, .app[data-collapsed] .sb-chevron { display:none; }
+  .sb-badge {
+    font:500 10px "JetBrains Mono",monospace; color:var(--muted);
+    background:var(--bg); border:1px solid var(--line); border-radius:99px;
+    padding:1px 7px; flex:none; cursor:help;
+  }
+  .sb-badge.warn { color:var(--warn); border-color:rgba(224,164,76,.3); }
+  .sb-chevron { flex:none; color:var(--faint); font-size:10px; transition:transform 140ms cubic-bezier(.2,0,0,1); }
+  .sb-item[data-open] > .sb-btn .sb-chevron { transform:rotate(90deg); }
+
+  .sb-sub { display:none; margin:2px 0 4px 15px; padding-left:10px; border-left:1px solid var(--line); }
+  .sb-item[data-open] > .sb-sub { display:block; }
+  .app[data-collapsed] .sb-sub { display:none !important; }
+  .sb-sub .sb-btn { height:28px; font-size:12.5px; border-radius:6px; }
+  .dot { width:6px; height:6px; border-radius:50%; flex:none; margin-left:auto; cursor:help; }
+  .dot.ok{background:var(--ok)} .dot.warn{background:var(--warn)} .dot.bad{background:var(--bad)}
+
+  /* ── Footer: labeled coverage ── */
+  .sb-footer { padding:10px; border-top:1px solid var(--line-soft); }
+  .sb-user {
+    display:flex; align-items:center; gap:10px;
+    padding:6px; border-radius:8px; cursor:pointer;
+    transition:background var(--fast); white-space:nowrap;
+  }
+  .sb-user:hover { background:var(--panel2); }
+  .sb-user .av { width:26px; height:26px; border-radius:6px; flex:none; background:var(--panel2); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; font:600 10px "JetBrains Mono",monospace; color:var(--accent); }
+  .sb-user .t { min-width:0; overflow:hidden; }
+  .sb-user .t b { display:block; font-size:12px; font-weight:500; overflow:hidden; text-overflow:ellipsis; }
+  .sb-user .t small { display:block; font:10px "JetBrains Mono",monospace; color:var(--faint); }
+  .app[data-collapsed] .sb-user { justify-content:center; padding:6px 0; }
+  .app[data-collapsed] .sb-user .t, .app[data-collapsed] .sb-coverage { display:none; }
+  .sb-coverage {
+    display:flex; height:4px; border-radius:99px; overflow:hidden;
+    background:var(--panel2); margin:8px 6px 2px; cursor:help;
+  }
+  .sb-coverage i { display:block; height:100%; }
+  .sb-cov-legend { display:flex; gap:10px; padding:4px 6px 0; font:10px "JetBrains Mono",monospace; color:var(--faint); white-space:nowrap; }
+  .sb-cov-legend span { display:flex; align-items:center; gap:4px; cursor:help; }
+  .app[data-collapsed] .sb-cov-legend { display:none; }
+  .sb-cov-legend .dot { margin:0; }
+
+  /* ── Main ── */
+  .main { flex:1; min-width:0; }
+  .topbar { display:flex; align-items:center; gap:12px; height:48px; padding:0 16px; border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--bg); z-index:5; }
+  .trigger {
+    width:30px; height:30px; border-radius:6px; border:none; background:none; cursor:pointer;
+    color:var(--muted); font-size:14px; display:flex; align-items:center; justify-content:center;
+    transition:background var(--fast), color var(--fast); flex:none;
+  }
+  .trigger:hover { background:var(--panel2); color:var(--text); }
+  .crumb { font:11.5px "JetBrains Mono",monospace; color:var(--muted); overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+  .crumb b { color:var(--dim); font-weight:400; }
+  .content { max-width:72ch; margin:0 auto; padding:44px 24px 90px; }
+  .kick { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .label { font:500 10.5px "JetBrains Mono",monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); }
+  .chip { display:inline-flex; gap:6px; align-items:center; font:500 10.5px "JetBrains Mono",monospace; letter-spacing:.08em; text-transform:uppercase; color:var(--ok); background:rgba(70,192,138,.12); border:1px solid rgba(70,192,138,.25); border-radius:99px; padding:3px 10px; }
+  h1 { font:640 clamp(32px,5vw,44px)/1.05 "Archivo",sans-serif; letter-spacing:-.028em; margin:10px 0 12px; }
+  p { color:var(--dim); margin:12px 0; }
+  .hint { margin-top:30px; padding:14px 16px; background:var(--panel); border:1px solid var(--line); border-radius:8px; font:12px/1.7 "JetBrains Mono",monospace; color:var(--muted); }
+  .hint b { color:var(--accent); font-weight:500; }
+
+  /* ── Mobile: off-canvas sheet + scrim (shadcn mobile pattern) ── */
+  .scrim { display:none; }
+  @media (max-width: 768px) {
+    .sidebar {
+      position:fixed; inset:0 auto 0 0; z-index:40;
+      width:min(18rem, 85vw) !important;
+      transform:translateX(-100%);
+      box-shadow:0 0 60px rgba(0,0,0,.6);
+    }
+    .app[data-mobile-open] .sidebar { transform:translateX(0); }
+    .app[data-collapsed] .sidebar { width:min(18rem,85vw) !important; } /* icon mode n/a on mobile */
+    .app[data-collapsed] .sb-label, .app[data-collapsed] .sb-btn .lbl,
+    .app[data-collapsed] .sb-badge, .app[data-collapsed] .sb-chevron,
+    .app[data-collapsed] .sb-brand .t, .app[data-collapsed] .sb-search .lbl,
+    .app[data-collapsed] .sb-search kbd, .app[data-collapsed] .sb-user .t,
+    .app[data-collapsed] .sb-coverage, .app[data-collapsed] .sb-cov-legend { display:revert; opacity:1; height:auto; }
+    .app[data-collapsed] .sb-btn { justify-content:flex-start; padding:0 8px; }
+    .app[data-collapsed] .sb-search { width:100%; padding:0 10px; justify-content:flex-start; }
+    .scrim {
+      display:block; position:fixed; inset:0; z-index:30;
+      background:rgba(3,6,12,.6); backdrop-filter:blur(2px);
+      opacity:0; pointer-events:none; transition:opacity 200ms ease-out;
+    }
+    .app[data-mobile-open] .scrim { opacity:1; pointer-events:auto; }
+    .content { padding:32px 18px 80px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="sidebar" aria-label="Site navigation">
+    <div class="sb-header">
+      <div class="sb-brand">
+        <span class="mark">EP</span>
+        <span class="t"><b>Engineering Playbook</b><small>main · 57 pages</small></span>
+      </div>
+      <button class="sb-search" aria-label="Search the playbook">
+        <span class="si">🔍</span><span class="lbl">Search the playbook…</span><kbd>Ctrl K</kbd>
+      </button>
+    </div>
+
+    <nav class="sb-content">
+      <div class="sb-group">
+        <span class="sb-label">Playbook</span>
+        <div class="sb-item"><a class="sb-btn" href="#"><span class="ico">⌂</span><span class="lbl">Overview</span></a></div>
+        <div class="sb-item"><a class="sb-btn" href="#"><span class="ico">◇</span><span class="lbl">Principles</span><span class="sb-badge" title="9 pages in this section">9</span></a></div>
+      </div>
+
+      <div class="sb-group">
+        <span class="sb-label">Library</span>
+        <div class="sb-item" data-open>
+          <button class="sb-btn" data-toggle><span class="ico">▣</span><span class="lbl">Authentication</span><span class="sb-badge" title="10 pages in this section">10</span><span class="sb-chevron">›</span></button>
+          <div class="sb-sub">
+            <div class="sb-item"><a class="sb-btn" href="#"><span class="lbl">Email + password</span><span class="dot ok" title="Status: reviewed"></span></a></div>
+            <div class="sb-item"><a class="sb-btn" data-active href="#" aria-current="page"><span class="lbl">JWT</span><span class="dot ok" title="Status: reviewed"></span></a></div>
+            <div class="sb-item"><a class="sb-btn" href="#"><span class="lbl">OAuth 2.0</span><span class="dot ok" title="Status: reviewed"></span></a></div>
+            <div class="sb-item"><a class="sb-btn" href="#"><span class="lbl">OIDC</span><span class="dot warn" title="Status: draft"></span></a></div>
+            <div class="sb-item"><a class="sb-btn" href="#"><span class="lbl">Passkeys</span><span class="dot warn" title="Status: draft"></span></a></div>
+            <div class="sb-item"><a class="sb-btn" href="#"><span class="lbl">Session cookies</span><span class="dot ok" title="Status: reviewed"></span></a></div>
+            <div class="sb-item"><a class="sb-btn" href="#"><span class="lbl">Enterprise SSO</span><span class="dot bad" title="Status: stub — not yet written"></span></a></div>
+          </div>
+        </div>
+        <div class="sb-item">
+          <button class="sb-btn" data-toggle><span class="ico">⛨</span><span class="lbl">Security</span><span class="sb-badge" title="16 pages in this section">16</span><span class="sb-chevron">›</span></button>
+          <div class="sb-sub">
+            <div class="sb-item"><a class="sb-btn" href="#"><span class="lbl">Password storage</span><span class="dot ok" title="Status: reviewed"></span></a></div>
+            <div class="sb-item"><a class="sb-btn" href="#"><span class="lbl">Rate limiting</span><span class="dot warn" title="Status: draft"></span></a></div>
+            <div class="sb-item"><a class="sb-btn" href="#"><span class="lbl">Incident response</span><span class="dot bad" title="Status: stub — not yet written"></span></a></div>
+          </div>
+        </div>
+        <div class="sb-item"><a class="sb-btn" href="#"><span class="ico">◆</span><span class="lbl">Decisions</span></a></div>
+        <div class="sb-item"><a class="sb-btn" href="#"><span class="ico">☑</span><span class="lbl">Checklists</span></a></div>
+        <div class="sb-item"><a class="sb-btn" href="#"><span class="ico">⊞</span><span class="lbl">Matrices</span></a></div>
+      </div>
+
+      <div class="sb-group">
+        <span class="sb-label">What's moving</span>
+        <div class="sb-item"><a class="sb-btn" href="#"><span class="ico">↻</span><span class="lbl">Changelog</span></a></div>
+        <div class="sb-item"><a class="sb-btn" href="#"><span class="ico">⚑</span><span class="lbl">Research queue</span><span class="sb-badge warn" title="8 stubs / stale pages awaiting research">8</span></a></div>
+        <div class="sb-item"><a class="sb-btn" href="#"><span class="ico">#</span><span class="lbl">Tags</span></a></div>
+      </div>
+    </nav>
+
+    <div class="sb-footer">
+      <div class="sb-user" title="Repository">
+        <span class="av">ry</span>
+        <span class="t"><b>ryansyenyi/engineering-playbook</b><small>GitHub · main</small></span>
+      </div>
+      <div class="sb-coverage" title="Playbook coverage: 31 reviewed, 14 draft, 12 stub (57 pages)" role="img" aria-label="Coverage: 31 reviewed, 14 draft, 12 stub">
+        <i style="background:var(--ok); width:54%"></i>
+        <i style="background:var(--warn); width:25%"></i>
+        <i style="background:var(--bad); width:21%"></i>
+      </div>
+      <div class="sb-cov-legend">
+        <span title="Pages fully reviewed against sources"><span class="dot ok"></span>31 reviewed</span>
+        <span title="Pages drafted, not yet reviewed"><span class="dot warn"></span>14 draft</span>
+        <span title="Placeholder pages, no content yet"><span class="dot bad"></span>12 stub</span>
+      </div>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim"></div>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="trigger" id="trigger" title="Toggle sidebar (Ctrl+B)" aria-label="Toggle sidebar">⫸</button>
+      <span class="crumb">modules / authentication / <b>jwt</b></span>
+    </div>
+    <div class="content">
+      <div class="kick"><span class="label">Module · Authentication</span><span class="chip">✓ Reviewed 2026-09-07</span></div>
+      <h1>JWT</h1>
+      <p>A signed, self-contained set of claims a recipient can verify without calling back to the issuer. That stateless property is the entire reason to reach for a JWT — and the source of everything hard about revoking one.</p>
+      <div class="hint">
+        v2 changes: search bar full-width w/ icon-only collapsed state · footer coverage bar now labeled (31 reviewed / 14 draft / 12 stub) · every dot + badge has a tooltip · mobile ≤768px = off-canvas drawer + scrim (⫸ opens, scrim/Esc closes). Desktop: <b>Ctrl+B</b> toggles icon rail.
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const app = document.getElementById('app');
+  const mobile = () => matchMedia('(max-width: 768px)').matches;
+  const toggle = () => {
+    if (mobile()) app.toggleAttribute('data-mobile-open');
+    else app.toggleAttribute('data-collapsed');
+  };
+  document.getElementById('trigger').addEventListener('click', toggle);
+  document.getElementById('scrim').addEventListener('click', () => app.removeAttribute('data-mobile-open'));
+  addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key.toLowerCase() === 'b') { e.preventDefault(); toggle(); }
+    if (e.key === 'Escape') app.removeAttribute('data-mobile-open');
+  });
+  document.querySelectorAll('[data-toggle]').forEach(b =>
+    b.addEventListener('click', () => {
+      if (!mobile() && app.hasAttribute('data-collapsed')) { app.removeAttribute('data-collapsed'); b.parentElement.setAttribute('data-open',''); return; }
+      b.parentElement.toggleAttribute('data-open');
+    }));
+</script>
+</body>
+</html>

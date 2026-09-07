@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JWT vs session cookies · Engineering Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/playbook.css">
+<style>
+  .vs { display: flex; align-items: baseline; gap: 18px; margin: 8px 0 6px; flex-wrap: wrap; }
+  .vs h1 { font-size: clamp(32px, 4vw, 46px); }
+  .vs .v { font-family: var(--mono); font-size: 14px; color: var(--faint); }
+  .tbl td.win { color: var(--ok); font-weight: 500; }
+  .tbl td.lose { color: var(--bad); }
+  .steps { counter-reset: s; margin: 16px 0; }
+  .step {
+    display: grid; grid-template-columns: 34px 1fr; gap: 16px;
+    padding: 14px 0; border-bottom: 1px solid var(--line-soft);
+  }
+  .step:last-child { border-bottom: none; }
+  .step::before {
+    counter-increment: s; content: counter(s, decimal-leading-zero);
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    color: var(--accent); padding-top: 2px;
+  }
+  .step b { display: block; font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+  .step p { margin: 0; font-size: 13.5px; }
+</style>
+</head>
+<body>
+
+<div class="frame frame--ctx">
+  <header class="topbar">
+    <a class="wordmark" href="index.html"><span class="mark"></span>Engineering Playbook</a>
+    <nav class="crumbs"><span>matrices</span><span class="sep">/</span><span class="here">jwt-vs-session-cookies</span></nav>
+    <button class="search-hint" onclick="location.href='search.html'">Search the playbook… <kbd>Ctrl K</kbd></button>
+  </header>
+
+  <nav class="rail">
+    <span class="label">Matrices</span>
+    <a href="matrix-jwt-vs-sessions.html" class="active">JWT vs session cookies <span class="dot dot--ok"></span></a>
+    <a href="matrix-jwt-vs-sessions.html">Password hashing <span class="dot dot--ok"></span></a>
+    <span class="label">Feeds into</span>
+    <a href="module-jwt.html">JWT module</a>
+    <a href="module-jwt.html">Session cookies module</a>
+    <a href="adr-0001.html">Decision records</a>
+  </nav>
+
+  <main class="main">
+    <article class="doc measure">
+      <div class="kicker rise">
+        <span class="label label--accent">Decision matrix · Authentication</span>
+        <span class="status-chip status-chip--ok"><span class="dot dot--ok"></span>Reviewed 2026-09-07</span>
+      </div>
+      <div class="vs rise"><h1>JWT <span class="v">vs</span> session cookies</h1></div>
+      <p class="lede rise d1">The decision is about revocation, not about tokens. A JWT is a bearer credential you cannot take back before it expires; a session identifier is a lookup you can delete. Everything else follows from that.</p>
+
+      <h2 id="matrix" class="rise d2">Scored comparison</h2>
+      <table class="tbl rise d2">
+        <thead><tr><th>Criterion</th><th>JWT (stateless)</th><th>Session cookie (server state)</th></tr></thead>
+        <tbody>
+          <tr><td>Revocation</td><td class="lose">Hard — valid until expiry</td><td class="win">Easy — delete the session</td></tr>
+          <tr><td>Horizontal scale</td><td class="win">No shared store needed</td><td class="lose">Needs shared session store</td></tr>
+          <tr><td>Payload size</td><td class="lose">Grows with claims</td><td class="win">Opaque identifier only</td></tr>
+          <tr><td>XSS exposure</td><td class="lose">High if stored in localStorage</td><td class="win">Low with HttpOnly</td></tr>
+          <tr><td>Logout semantics</td><td class="lose">Needs a denylist</td><td class="win">Immediate</td></tr>
+          <tr><td>Best fit</td><td class="mono">Short-lived service-to-service</td><td class="mono">Browser-facing applications</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout rise d3">
+        <span class="bar"></span>
+        <div class="body"><span class="label">Verdict</span>
+        Browser-facing: session cookies. Service-to-service with short lifetimes: JWT. If you need both, keep them separate — do not make one token serve two trust models.</div>
+      </div>
+
+      <h2 id="tradeoffs">Tradeoffs</h2>
+      <p>Statelessness buys horizontal scale and costs you immediate logout. Most applications that adopt JWTs then rebuild session state as a denylist — which is the state they were avoiding, with worse ergonomics.</p>
+
+      <h2 id="migration">Migration path</h2>
+      <p>Moving an existing JWT-in-browser deployment to cookies, in order:</p>
+      <div class="steps">
+        <div class="step"><div><b>Shorten the access-token lifetime</b><p>Get exposure down before touching architecture. 5 minutes is a defensible ceiling.</p></div></div>
+        <div class="step"><div><b>Move the token out of localStorage</b><p>Serve it as an <code>HttpOnly</code>, <code>Secure</code>, <code>SameSite=Lax</code> cookie. XSS can no longer read it.</p></div></div>
+        <div class="step"><div><b>Introduce the session store</b><p>Swap the JWT payload for an opaque identifier; claims move server-side.</p></div></div>
+        <div class="step"><div><b>Delete the denylist</b><p>Logout is now a session delete. The workaround infrastructure goes away.</p></div></div>
+      </div>
+    </article>
+  </main>
+
+  <aside class="ctx">
+    <span class="label">On this page</span>
+    <a class="toc active" href="#matrix">Scored comparison</a>
+    <a class="toc" href="#tradeoffs">Tradeoffs</a>
+    <a class="toc" href="#migration">Migration path</a>
+    <span class="label">Metadata</span>
+    <div class="meta-row"><span>Status</span><b style="color:var(--ok)">reviewed</b></div>
+    <div class="meta-row"><span>Reviewed</span><b>2026-09-07</b></div>
+    <div class="meta-row"><span>Sources</span><b>2</b></div>
+    <span class="label">Sources</span>
+    <div class="meta-row"><span>RFC 7519 · OWASP Session Mgmt Cheat Sheet</span></div>
+  </aside>
+</div>
+
+<footer class="statusline">
+  <span class="sl-mode">MATRIX</span>
+  <span>matrices/jwt-vs-session-cookies.md</span>
+  <span class="ok">✓ reviewed 2026-09-07</span>
+  <span>6 criteria</span>
+  <span class="sl-right">generated table in sync</span>
+</footer>
+
+</body>
+</html>

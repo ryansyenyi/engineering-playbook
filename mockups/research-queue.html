@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research queue · Engineering Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/playbook.css">
+<style>
+  .filters { display: flex; gap: 8px; margin: 22px 0 14px; }
+  .filters button {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .06em;
+    text-transform: uppercase; color: var(--muted);
+    background: var(--bg-raise); border: 1px solid var(--line);
+    border-radius: 99px; padding: 5px 13px; cursor: pointer;
+    transition: color var(--fast), border-color var(--fast);
+  }
+  .filters button:hover { color: var(--text-dim); border-color: var(--faint); }
+  .filters button.on { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+  .age-bar { display: inline-block; width: 56px; height: 4px; border-radius: 99px; background: var(--bg-raise2); overflow: hidden; vertical-align: middle; }
+  .age-bar i { display: block; height: 100%; background: var(--warn); }
+  .age-bar.hot i { background: var(--bad); }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <header class="topbar">
+    <a class="wordmark" href="index.html"><span class="mark"></span>Engineering Playbook</a>
+    <nav class="crumbs"><span class="here">research-queue</span></nav>
+    <button class="search-hint" onclick="location.href='search.html'">Search the playbook… <kbd>Ctrl K</kbd></button>
+  </header>
+
+  <nav class="rail">
+    <span class="label">What's moving</span>
+    <a href="index.html">Recently updated</a>
+    <a href="changelog.html">Changelog</a>
+    <a href="research-queue.html" class="active">Research queue <span class="dot dot--warn"></span></a>
+    <span class="label">Playbook</span>
+    <a href="index.html">Overview</a>
+    <a href="module-authentication.html">Architecture library</a>
+  </nav>
+
+  <main class="main">
+    <div class="doc" style="max-width: 900px">
+      <div class="kicker rise"><span class="label label--accent">Stubs and pages past their review date</span></div>
+      <h1 class="rise">Research queue</h1>
+      <p class="lede rise d1">A page that hasn't been reviewed can't be trusted under pressure. This queue is the honest list: what's missing, what's stale, and how overdue each one is.</p>
+
+      <div class="filters rise d2" role="group" aria-label="Filter queue">
+        <button class="on">All · 8</button>
+        <button>Stubs · 5</button>
+        <button>Past review · 3</button>
+      </div>
+
+      <table class="tbl rise d2">
+        <thead><tr><th>Page</th><th>State</th><th>Module</th><th>Overdue</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Incident response</td>
+            <td><span class="status-chip status-chip--bad"><span class="dot dot--bad"></span>Stub</span></td>
+            <td class="mono">security</td>
+            <td><span class="age-bar hot"><i style="width:90%"></i></span> <span class="mono">38 d</span></td>
+            <td class="mono">P1 — blocks on-call runbook</td>
+          </tr>
+          <tr>
+            <td>Enterprise SSO</td>
+            <td><span class="status-chip status-chip--bad"><span class="dot dot--bad"></span>Stub</span></td>
+            <td class="mono">authentication</td>
+            <td><span class="age-bar hot"><i style="width:75%"></i></span> <span class="mono">31 d</span></td>
+            <td class="mono">P1 — customer commitment</td>
+          </tr>
+          <tr>
+            <td>Authorization</td>
+            <td><span class="status-chip status-chip--bad"><span class="dot dot--bad"></span>Stub</span></td>
+            <td class="mono">authorization</td>
+            <td><span class="age-bar"><i style="width:55%"></i></span> <span class="mono">24 d</span></td>
+            <td class="mono">P2</td>
+          </tr>
+          <tr>
+            <td>Key rotation</td>
+            <td><span class="status-chip status-chip--warn"><span class="dot dot--warn"></span>Past review</span></td>
+            <td class="mono">security</td>
+            <td><span class="age-bar"><i style="width:40%"></i></span> <span class="mono">17 d</span></td>
+            <td class="mono">P2 — sources may be stale</td>
+          </tr>
+          <tr>
+            <td>Rate limiting</td>
+            <td><span class="status-chip status-chip--warn"><span class="dot dot--warn"></span>Past review</span></td>
+            <td class="mono">security</td>
+            <td><span class="age-bar"><i style="width:30%"></i></span> <span class="mono">12 d</span></td>
+            <td class="mono">P3</td>
+          </tr>
+          <tr>
+            <td>Database design</td>
+            <td><span class="status-chip status-chip--bad"><span class="dot dot--bad"></span>Stub</span></td>
+            <td class="mono">database-design</td>
+            <td><span class="age-bar"><i style="width:28%"></i></span> <span class="mono">11 d</span></td>
+            <td class="mono">P3</td>
+          </tr>
+          <tr>
+            <td>Networking</td>
+            <td><span class="status-chip status-chip--bad"><span class="dot dot--bad"></span>Stub</span></td>
+            <td class="mono">networking</td>
+            <td><span class="age-bar"><i style="width:20%"></i></span> <span class="mono">8 d</span></td>
+            <td class="mono">P3</td>
+          </tr>
+          <tr>
+            <td>Secure headers</td>
+            <td><span class="status-chip status-chip--warn"><span class="dot dot--warn"></span>Past review</span></td>
+            <td class="mono">security</td>
+            <td><span class="age-bar"><i style="width:12%"></i></span> <span class="mono">5 d</span></td>
+            <td class="mono">P3</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout--warn rise d3">
+        <span class="bar"></span>
+        <div class="body"><span class="label">Queue rule</span>
+        Anything at P1 for more than 30 days gets raised at the weekly review. A stub that blocks an on-call path is a production risk, not a documentation gap.</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer class="statusline">
+  <span class="sl-mode">QUEUE</span>
+  <span>research-queue.md</span>
+  <span class="bad">5 stubs</span>
+  <span class="warn">3 past review</span>
+  <span class="sl-right">oldest: 38 days</span>
+</footer>
+
+</body>
+</html>

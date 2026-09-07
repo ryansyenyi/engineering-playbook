@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ADR-0001 · Use Argon2id for password hashing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/playbook.css">
+<style>
+  .adr-id {
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    color: var(--accent); letter-spacing: .05em;
+  }
+  .conseq { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+  @media (max-width: 720px) { .conseq { grid-template-columns: 1fr; } }
+  .conseq .card { padding: 16px 18px; }
+  .conseq .card p { font-size: 13.5px; color: var(--text-dim); }
+  .conseq .pos { border-top: 2px solid var(--ok); }
+  .conseq .neg { border-top: 2px solid var(--bad); }
+  .accepted {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ok); background: var(--ok-soft);
+    border: 1px solid rgba(70,192,138,.3); border-radius: 6px;
+    padding: 6px 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="frame frame--ctx">
+  <header class="topbar">
+    <a class="wordmark" href="index.html"><span class="mark"></span>Engineering Playbook</a>
+    <nav class="crumbs"><span>decisions</span><span class="sep">/</span><span class="here">0001-argon2id-for-password-hashing</span></nav>
+    <button class="search-hint" onclick="location.href='search.html'">Search the playbook… <kbd>Ctrl K</kbd></button>
+  </header>
+
+  <nav class="rail">
+    <span class="label">Decision records</span>
+    <a href="adr-0001.html" class="active">0001 · Argon2id <span class="dot dot--ok"></span></a>
+    <span class="label">Related</span>
+    <a href="matrix-jwt-vs-sessions.html">Password hashing matrix</a>
+    <a href="checklist-authentication.html">Auth checklist</a>
+    <a href="module-jwt.html">Email + password module</a>
+  </nav>
+
+  <main class="main">
+    <article class="doc measure">
+      <div class="kicker rise">
+        <span class="adr-id">ADR-0001</span>
+        <span class="accepted"><span class="dot dot--ok"></span>Accepted</span>
+      </div>
+      <h1 class="rise">Use Argon2id for password hashing</h1>
+      <p class="lede rise d1">Password storage must stay expensive for an attacker holding a stolen database and cheap enough for a login request.</p>
+
+      <h2 id="context" class="rise d2">Context</h2>
+      <p>bcrypt has served this role but is <strong>not memory hard</strong> and silently truncates input past 72 bytes. PBKDF2 is weakest against parallel hardware and is chosen almost entirely for compliance reasons.</p>
+
+      <h2 id="decision">Decision</h2>
+      <div class="callout">
+        <span class="bar"></span>
+        <div class="body"><span class="label">The decision</span>
+        Argon2id is the default for all new password storage, with parameters tuned so verification stays under <strong>500&nbsp;ms</strong> on production hardware.</div>
+      </div>
+
+      <h2 id="consequences">Consequences</h2>
+      <div class="conseq rise">
+        <div class="card pos">
+          <span class="label" style="color:var(--ok)">Positive</span>
+          <p style="margin-top:8px">Memory hardness removes the attacker's parallel-hardware advantage. Argon2id combines Argon2i's side-channel resistance with Argon2d's GPU resistance. Standardized in RFC 9106, recommended first by OWASP.</p>
+        </div>
+        <div class="card neg">
+          <span class="label" style="color:var(--bad)">Negative</span>
+          <p style="margin-top:8px">Verification consumes real memory per concurrent login, which constrains how many logins a node handles at once. Parameters must be re-tuned when hardware changes — and that re-tuning is easy to forget.</p>
+        </div>
+      </div>
+
+      <h2 id="alternatives">Alternatives considered</h2>
+      <p>bcrypt and PBKDF2, scored in <a class="link" href="matrix-jwt-vs-sessions.html">the password hashing matrix</a>. Neither is memory hard; both lose to Argon2id on the criterion that matters — cost to an attacker with parallel hardware.</p>
+
+      <h2 id="wayback">The way back out</h2>
+      <p>Hashes are upgraded lazily at next successful login, so rolling back means changing the default for <em>new</em> hashes only. No migration, no forced resets.</p>
+    </article>
+  </main>
+
+  <aside class="ctx">
+    <span class="label">On this page</span>
+    <a class="toc active" href="#context">Context</a>
+    <a class="toc" href="#decision">Decision</a>
+    <a class="toc" href="#consequences">Consequences</a>
+    <a class="toc" href="#alternatives">Alternatives</a>
+    <a class="toc" href="#wayback">The way back out</a>
+    <span class="label">Metadata</span>
+    <div class="meta-row"><span>Status</span><b style="color:var(--ok)">accepted</b></div>
+    <div class="meta-row"><span>Reviewed</span><b>2026-09-07</b></div>
+    <div class="meta-row"><span>Module</span><b>authentication</b></div>
+    <span class="label">Sources</span>
+    <div class="meta-row"><span>RFC 9106 · OWASP Password Storage Cheat Sheet</span></div>
+  </aside>
+</div>
+
+<footer class="statusline">
+  <span class="sl-mode">ADR</span>
+  <span>decisions/0001-argon2id-for-password-hashing.md</span>
+  <span class="ok">✓ accepted</span>
+  <span>2 sources</span>
+  <span class="sl-right">supersedes: none</span>
+</footer>
+
+</body>
+</html>

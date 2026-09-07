@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>08 · Ocean Glass</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --text:#e9f1fc; --dim:#b6c7dd; --muted:#7f95b3; --faint:#54677f;
+    --accent:#4da6ff; --violet:#8f7bff;
+    --glass:rgba(20,34,58,.55); --glass-line:rgba(120,170,230,.16);
+    --ok:#4fd0a0; --bad:#ff8a76; --warn:#f2c063;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    min-height:100vh;
+    background:#050b18;
+    background-image:
+      radial-gradient(900px 420px at 75% -60px, rgba(77,166,255,.22), transparent 65%),
+      radial-gradient(700px 380px at 12% 8%, rgba(143,123,255,.14), transparent 60%),
+      linear-gradient(180deg,#050b18 0%, #0a1730 100%);
+    background-attachment:fixed;
+    color:var(--text); font:14.5px/1.68 "Inter",sans-serif; -webkit-font-smoothing:antialiased;
+  }
+  a { color:inherit; text-decoration:none; }
+  .top { display:flex; align-items:center; gap:16px; height:56px; padding:0 26px; }
+  .mark { width:20px; height:20px; border-radius:50%; background:conic-gradient(from 200deg, var(--accent), var(--violet), var(--accent)); filter:blur(.3px); box-shadow:0 0 18px rgba(77,166,255,.55); }
+  .wd { display:flex; align-items:center; gap:10px; font:600 14px "Sora",sans-serif; letter-spacing:-.01em; }
+  .crumb { font:12px "JetBrains Mono",monospace; color:var(--muted); }
+  .kbd { margin-left:auto; font:11px "JetBrains Mono",monospace; color:var(--dim); background:var(--glass); border:1px solid var(--glass-line); border-radius:6px; padding:3px 9px; backdrop-filter:blur(10px); }
+  main { max-width:74ch; margin:0 auto; padding:44px 24px 90px; }
+  .pane { background:var(--glass); border:1px solid var(--glass-line); border-radius:16px; backdrop-filter:blur(14px); padding:34px 38px; box-shadow:0 20px 60px rgba(2,8,20,.5); }
+  .pane + .pane { margin-top:18px; }
+  .label { font:500 10.5px "JetBrains Mono",monospace; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+  .kick { display:flex; gap:14px; align-items:center; }
+  .chip { display:inline-flex; gap:6px; align-items:center; font:500 10.5px "JetBrains Mono",monospace; letter-spacing:.08em; text-transform:uppercase; color:var(--ok); border:1px solid rgba(79,208,160,.3); border-radius:99px; padding:3px 10px; }
+  .dot { width:7px; height:7px; border-radius:50%; background:var(--ok); box-shadow:0 0 8px var(--ok); }
+  h1 { font:700 clamp(36px,5vw,54px)/1.05 "Sora",sans-serif; letter-spacing:-.03em; margin:12px 0 12px;
+       background:linear-gradient(120deg,#fff 30%, #9cc8ff 75%, #b3a6ff); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .lede { font-size:16px; color:var(--dim); max-width:58ch; }
+  h2 { font:600 18px "Sora",sans-serif; letter-spacing:-.015em; margin:0 0 10px; }
+  p { margin:11px 0; color:var(--dim); }
+  strong { color:var(--text); font-weight:600; }
+  .link { color:var(--accent); border-bottom:1px solid rgba(77,166,255,.4); }
+  pre { background:rgba(5,12,26,.7); border:1px solid var(--glass-line); border-radius:12px; padding:16px 18px; margin:16px 0 4px; font:12.5px/1.7 "JetBrains Mono",monospace; color:var(--dim); overflow-x:auto; }
+  pre .c{color:var(--faint)} pre .k{color:var(--accent)} pre .s{color:var(--ok)} pre .n{color:var(--warn)}
+  table { width:100%; border-collapse:collapse; font-size:13px; margin:14px 0 4px; }
+  th { font:500 10.5px "JetBrains Mono",monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); text-align:left; padding:9px 12px; border-bottom:1px solid var(--glass-line); }
+  td { padding:11px 12px; border-bottom:1px solid rgba(120,170,230,.08); color:var(--dim); }
+  tr:last-child td { border-bottom:none; }
+  td:first-child { color:var(--text); font-weight:500; }
+  .win{color:var(--ok);font-weight:500} .lose{color:var(--bad)}
+  .foot { display:flex; gap:20px; margin-top:20px; font:11px "JetBrains Mono",monospace; color:var(--muted); padding:0 8px; }
+  .foot .r { margin-left:auto; color:var(--accent); }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="wd" href="#"><span class="mark"></span>Engineering Playbook</a>
+  <span class="crumb">authentication / jwt</span>
+  <span class="kbd">⌘K</span>
+</header>
+<main>
+  <section class="pane">
+    <div class="kick"><span class="label">Module · Authentication</span><span class="chip"><span class="dot"></span>Reviewed 2026-09-07</span></div>
+    <h1>JWT</h1>
+    <p class="lede">A signed, self-contained set of claims a recipient can verify without calling back to the issuer. That stateless property is the entire reason to reach for a JWT — and the source of everything hard about revoking one.</p>
+  </section>
+
+  <section class="pane">
+    <h2>When to use</h2>
+    <p>Use a JWT as an <strong>access token for service-to-service calls</strong> where the verifying party should not need a shared session store. Keep lifetimes short: the token is a bearer credential you cannot take back before it expires. For browser-facing applications, prefer a <a class="link" href="#">session cookie</a>.</p>
+<pre><span class="c"># verifier configuration — the four checks that matter</span>
+<span class="k">algorithms</span>: [<span class="s">"EdDSA"</span>]          <span class="c"># pinned, never "none"</span>
+<span class="k">issuer</span>:     <span class="s">"https://auth.internal"</span>
+<span class="k">audience</span>:   <span class="s">"orders-api"</span>
+<span class="k">max_ttl</span>:    <span class="n">300</span>                   <span class="c"># seconds — short by default</span></pre>
+  </section>
+
+  <section class="pane">
+    <h2>Scored comparison</h2>
+    <table>
+      <thead><tr><th>Criterion</th><th>JWT (stateless)</th><th>Session cookie</th></tr></thead>
+      <tbody>
+        <tr><td>Revocation</td><td class="lose">Hard — valid until expiry</td><td class="win">Easy — delete the session</td></tr>
+        <tr><td>Horizontal scale</td><td class="win">No shared store needed</td><td class="lose">Needs shared session store</td></tr>
+        <tr><td>Logout semantics</td><td class="lose">Needs a denylist</td><td class="win">Immediate</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="foot">
+    <span>jwt.md</span><span>✓ reviewed</span><span>4 sources</span>
+    <span class="r">08 · Ocean Glass — aurora depth, glass panes</span>
+  </div>
+</main>
+</body>
+</html>

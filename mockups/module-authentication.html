@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Authentication · Engineering Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/playbook.css">
+<style>
+  .coverage {
+    display: flex; height: 6px; border-radius: 99px; overflow: hidden;
+    margin: 20px 0 6px; background: var(--bg-raise2);
+  }
+  .coverage i { display: block; height: 100%; }
+  .coverage .c-ok { background: var(--ok); width: 60%; }
+  .coverage .c-warn { background: var(--warn); width: 30%; }
+  .coverage .c-bad { background: var(--bad); width: 10%; }
+  .cov-legend { display: flex; gap: 18px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .cov-legend span { display: flex; align-items: center; gap: 6px; }
+  .pages { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-top: 28px; }
+  .page-row {
+    display: grid;
+    grid-template-columns: 14px 1fr auto auto auto;
+    align-items: center; gap: 16px;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--line-soft);
+    color: var(--text-dim);
+    transition: background var(--fast);
+  }
+  .page-row:last-child { border-bottom: none; }
+  .page-row:hover { background: var(--bg-raise); }
+  .page-row .name { font-weight: 500; color: var(--text); font-size: 13.5px; }
+  .page-row .name small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+  .page-row .m { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  @media (max-width: 700px) { .page-row { grid-template-columns: 14px 1fr auto; } .page-row .m:nth-of-type(2) { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <header class="topbar">
+    <a class="wordmark" href="index.html"><span class="mark"></span>Engineering Playbook</a>
+    <nav class="crumbs"><span>modules</span><span class="sep">/</span><span class="here">authentication</span></nav>
+    <button class="search-hint" onclick="location.href='search.html'">Search the playbook… <kbd>Ctrl K</kbd></button>
+  </header>
+
+  <nav class="rail">
+    <span class="label">Architecture library</span>
+    <a href="module-authentication.html">API design <span class="dot dot--bad"></span></a>
+    <a href="module-authentication.html" class="active">Authentication <span class="dot dot--ok"></span></a>
+    <a href="module-authentication.html">Authorization <span class="dot dot--bad"></span></a>
+    <a href="module-authentication.html">Database design <span class="dot dot--bad"></span></a>
+    <a href="module-authentication.html">Multi-tenancy <span class="dot dot--warn"></span></a>
+    <a href="module-authentication.html">Networking <span class="dot dot--bad"></span></a>
+    <a href="module-authentication.html">Observability <span class="dot dot--warn"></span></a>
+  </nav>
+
+  <main class="main">
+    <div class="doc" style="max-width: 860px">
+      <div class="kicker rise">
+        <span class="label label--accent">Module hub</span>
+      </div>
+      <h1 class="rise">Authentication</h1>
+      <p class="lede rise d1">Ten ways to prove who someone is, one page each: when to use it, how to build it, how to verify it. Start from the matrix if you are choosing; start from the checklist if you are shipping.</p>
+
+      <div class="coverage rise d2" aria-hidden="true"><i class="c-ok"></i><i class="c-warn"></i><i class="c-bad"></i></div>
+      <div class="cov-legend rise d2">
+        <span><span class="dot dot--ok"></span>6 reviewed</span>
+        <span><span class="dot dot--warn"></span>3 draft</span>
+        <span><span class="dot dot--bad"></span>1 stub</span>
+      </div>
+
+      <div class="pages rise d3">
+        <a class="page-row" href="module-jwt.html"><span class="dot dot--ok"></span><span class="name">Email + password<small>The baseline — Argon2id, breached-password checks, lockout</small></span><span class="m">4 sources</span><span class="m">2026-09-05</span><span class="m">→</span></a>
+        <a class="page-row" href="module-jwt.html"><span class="dot dot--ok"></span><span class="name">JWT<small>Stateless claims for service-to-service; revocation is the catch</small></span><span class="m">4 sources</span><span class="m">2026-09-07</span><span class="m">→</span></a>
+        <a class="page-row" href="module-jwt.html"><span class="dot dot--ok"></span><span class="name">Session cookies<small>Server-state sessions for browser-facing apps</small></span><span class="m">3 sources</span><span class="m">2026-09-06</span><span class="m">→</span></a>
+        <a class="page-row" href="module-jwt.html"><span class="dot dot--ok"></span><span class="name">Refresh tokens<small>Rotation, reuse detection, and the one-strike rule</small></span><span class="m">3 sources</span><span class="m">2026-09-04</span><span class="m">→</span></a>
+        <a class="page-row" href="module-jwt.html"><span class="dot dot--ok"></span><span class="name">OAuth 2.0<small>Delegated authorization — code flow with PKCE only</small></span><span class="m">5 sources</span><span class="m">2026-09-02</span><span class="m">→</span></a>
+        <a class="page-row" href="module-jwt.html"><span class="dot dot--ok"></span><span class="name">OIDC<small>Identity on top of OAuth — ID tokens and discovery</small></span><span class="m">3 sources</span><span class="m">2026-08-31</span><span class="m">→</span></a>
+        <a class="page-row" href="module-jwt.html"><span class="dot dot--warn"></span><span class="name">Passkeys<small>WebAuthn credentials — phishing-resistant by construction</small></span><span class="m">2 sources</span><span class="m">2026-08-28</span><span class="m">→</span></a>
+        <a class="page-row" href="module-jwt.html"><span class="dot dot--warn"></span><span class="name">Magic link<small>Email-as-authenticator; deliverability is the weak joint</small></span><span class="m">1 source</span><span class="m">2026-08-24</span><span class="m">→</span></a>
+        <a class="page-row" href="module-jwt.html"><span class="dot dot--warn"></span><span class="name">Social login<small>Delegating identity to a consumer IdP</small></span><span class="m">2 sources</span><span class="m">2026-08-20</span><span class="m">→</span></a>
+        <a class="page-row" href="research-queue.html"><span class="dot dot--bad"></span><span class="name">Enterprise SSO<small>Stub — queued for research</small></span><span class="m">0 sources</span><span class="m">—</span><span class="m">→</span></a>
+      </div>
+    </div>
+  </main>
+</div>
+
+<footer class="statusline">
+  <span class="sl-mode">MODULE</span>
+  <span>modules/authentication/</span>
+  <span class="ok">6 reviewed</span>
+  <span class="warn">3 draft</span>
+  <span class="bad">1 stub</span>
+  <span class="sl-right">27 sources across module</span>
+</footer>
+
+</body>
+</html>

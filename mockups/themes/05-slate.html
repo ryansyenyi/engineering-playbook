@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05 · Slate</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0f1116; --panel:#15181f; --panel2:#1a1e27; --line:#23283340; --line-hard:#232833;
+    --text:#e8eaf0; --dim:#b3b9c9; --muted:#7c8497; --faint:#525a6e;
+    --indigo:#6e79f4; --indigo-soft:rgba(110,121,244,.13);
+    --ok:#4cc38a; --bad:#e5686d; --warn:#d9a541;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font:14px/1.65 "Inter",sans-serif; -webkit-font-smoothing:antialiased; letter-spacing:-.006em; }
+  a { color:inherit; text-decoration:none; }
+  .top { display:flex; align-items:center; gap:16px; height:48px; padding:0 20px; border-bottom:1px solid var(--line-hard); background:rgba(15,17,22,.85); backdrop-filter:blur(8px); position:sticky; top:0; }
+  .mark { width:16px; height:16px; border-radius:5px; background:linear-gradient(135deg,#8b93ff,#5058d6); box-shadow:0 0 12px rgba(110,121,244,.5); }
+  .wd { display:flex; align-items:center; gap:9px; font-weight:600; font-size:13px; letter-spacing:-.01em; }
+  .crumb { font-size:12px; color:var(--muted); }
+  .crumb b { color:var(--dim); font-weight:500; }
+  .kbd { margin-left:auto; font:11px "JetBrains Mono",monospace; color:var(--muted); background:var(--panel2); border:1px solid var(--line-hard); border-radius:5px; padding:2px 7px; }
+  .glow { height:1px; background:linear-gradient(90deg,transparent,rgba(110,121,244,.7),transparent); }
+  main { max-width:70ch; margin:0 auto; padding:56px 24px 90px; }
+  .kick { display:flex; gap:10px; align-items:center; font-size:12px; }
+  .pill { display:inline-flex; gap:6px; align-items:center; font-weight:500; font-size:11.5px; color:var(--dim); background:var(--panel2); border:1px solid var(--line-hard); border-radius:99px; padding:3px 11px; }
+  .pill.mod { color:var(--indigo); background:var(--indigo-soft); border-color:transparent; }
+  .dot { width:6px; height:6px; border-radius:50%; background:var(--ok); }
+  h1 { font:700 clamp(32px,4.4vw,46px)/1.1 "Inter",sans-serif; letter-spacing:-.035em; margin:16px 0 12px; background:linear-gradient(180deg,#fff,#c5cadb); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .lede { font-size:15.5px; color:var(--muted); max-width:58ch; line-height:1.65; }
+  h2 { font:600 17px "Inter",sans-serif; letter-spacing:-.02em; margin:42px 0 10px; }
+  p { margin:11px 0; color:var(--dim); }
+  strong { color:var(--text); font-weight:600; }
+  .link { color:var(--indigo); }
+  .link:hover { text-decoration:underline; text-underline-offset:3px; }
+  pre { background:var(--panel); border:1px solid var(--line-hard); border-radius:10px; padding:16px 18px; margin:16px 0; font:12.5px/1.7 "JetBrains Mono",monospace; color:var(--dim); overflow-x:auto; }
+  pre .c{color:var(--faint)} pre .k{color:var(--indigo)} pre .s{color:var(--ok)} pre .n{color:var(--warn)}
+  table { width:100%; border-collapse:separate; border-spacing:0; font-size:13px; margin:16px 0; background:var(--panel); border:1px solid var(--line-hard); border-radius:10px; overflow:hidden; }
+  th { font-weight:500; font-size:11.5px; color:var(--muted); text-align:left; padding:9px 14px; border-bottom:1px solid var(--line-hard); background:var(--panel2); }
+  td { padding:11px 14px; border-bottom:1px solid var(--line-hard); color:var(--dim); }
+  tr:last-child td { border-bottom:none; }
+  td:first-child { color:var(--text); font-weight:500; }
+  .win{color:var(--ok);font-weight:500} .lose{color:var(--bad)}
+  .meta { display:flex; gap:8px; margin-top:46px; }
+  .meta .pill { font-family:"JetBrains Mono",monospace; font-size:10.5px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="wd" href="#"><span class="mark"></span>Playbook</a>
+  <span class="crumb">Authentication <span style="color:var(--faint)">›</span> <b>JWT</b></span>
+  <span class="kbd">⌘K</span>
+</header>
+<div class="glow"></div>
+<main>
+  <div class="kick">
+    <span class="pill mod">Authentication</span>
+    <span class="pill"><span class="dot"></span>Reviewed · Sep 7, 2026</span>
+  </div>
+  <h1>JWT</h1>
+  <p class="lede">A signed, self-contained set of claims a recipient can verify without calling back to the issuer. That stateless property is the entire reason to reach for a JWT — and the source of everything hard about revoking one.</p>
+
+  <h2>When to use</h2>
+  <p>Use a JWT as an <strong>access token for service-to-service calls</strong> where the verifying party should not need a shared session store. Keep lifetimes short: the token is a bearer credential you cannot take back before it expires. For browser-facing applications, prefer a <a class="link" href="#">session cookie</a>.</p>
+
+<pre><span class="c"># verifier configuration — the four checks that matter</span>
+<span class="k">algorithms</span>: [<span class="s">"EdDSA"</span>]          <span class="c"># pinned, never "none"</span>
+<span class="k">issuer</span>:     <span class="s">"https://auth.internal"</span>
+<span class="k">audience</span>:   <span class="s">"orders-api"</span>
+<span class="k">max_ttl</span>:    <span class="n">300</span>                   <span class="c"># seconds — short by default</span></pre>
+
+  <h2>Scored comparison</h2>
+  <table>
+    <thead><tr><th>Criterion</th><th>JWT (stateless)</th><th>Session cookie</th></tr></thead>
+    <tbody>
+      <tr><td>Revocation</td><td class="lose">Hard — valid until expiry</td><td class="win">Easy — delete the session</td></tr>
+      <tr><td>Horizontal scale</td><td class="win">No shared store needed</td><td class="lose">Needs shared session store</td></tr>
+      <tr><td>Logout semantics</td><td class="lose">Needs a denylist</td><td class="win">Immediate</td></tr>
+    </tbody>
+  </table>
+
+  <div class="meta">
+    <span class="pill">jwt.md</span>
+    <span class="pill">4 sources</span>
+    <span class="pill">05 · Slate — Linear-soft indigo, quiet surfaces</span>
+  </div>
+</main>
+</body>
+</html>
