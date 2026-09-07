@@ -1,4 +1,1164 @@
-/* Give generated tables room to breathe on wide pages. */
+/* ────────────────────────────────────────────────────────────────────────
+   Terminal Ink — dark theme layer for the Engineering Playbook
+   Zensical 0.0.59 (Material-for-MkDocs-compatible DOM/vars). Dark-only site.
+   Source of truth: mockups/themes/01-terminal-ink.html, mockups/assets/playbook.css
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* ── 1. Design tokens ──────────────────────────────────────────────────── */
+
+:root,
+[data-md-color-scheme="slate"] {
+  --ti-bg: #060a12;
+  --ti-panel: #0b111c;
+  --ti-panel2: #101826;
+  --ti-line: #1b2637;
+  --ti-line-soft: #141d2c;
+  --ti-text: #dfe9f7;
+  --ti-dim: #a8b8cd;
+  --ti-muted: #7e90a8;
+  --ti-faint: #52637a;
+  --ti-accent: #4d9dff;
+  --ti-accent-dark: #0a58c2;
+  --ti-accent-soft: rgba(77, 157, 255, 0.12);
+  --ti-accent-underline: rgba(77, 157, 255, 0.35);
+  --ti-selection: rgba(77, 157, 255, 0.28);
+  --ti-ok: #46c08a;
+  --ti-warn: #e0a44c;
+  --ti-bad: #e06d5b;
+  --ti-ok-soft: rgba(70, 192, 138, 0.12);
+  --ti-warn-soft: rgba(224, 164, 76, 0.13);
+  --ti-bad-soft: rgba(224, 109, 91, 0.12);
+
+  --ti-font-display: "Archivo", "Segoe UI", sans-serif;
+  --ti-font-body: "Inter", "Segoe UI", sans-serif;
+  --ti-font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+
+  --ti-fast: 120ms cubic-bezier(0.2, 0, 0, 1);
+  --ti-status-h: 30px;
+}
+
+/* ── 2. Map tokens onto Zensical/Material CSS variables ───────────────── */
+
+[data-md-color-scheme="slate"],
+:root {
+  /* base surfaces + text */
+  --md-default-bg-color: var(--ti-bg);
+  --md-default-bg-color--light: var(--ti-bg);
+  --md-default-bg-color--lighter: var(--ti-panel);
+  --md-default-bg-color--lightest: var(--ti-line-soft);
+  --md-default-fg-color: var(--ti-text);
+  --md-default-fg-color--light: var(--ti-dim);
+  --md-default-fg-color--lighter: var(--ti-muted);
+  --md-default-fg-color--lightest: var(--ti-line);
+
+  /* primary / accent */
+  --md-primary-fg-color: var(--ti-bg);
+  --md-primary-fg-color--dark: var(--ti-bg);
+  --md-primary-fg-color--light: var(--ti-panel);
+  --md-primary-bg-color: var(--ti-text);
+  --md-accent-fg-color: var(--ti-accent);
+  --md-accent-fg-color--transparent: var(--ti-accent-soft);
+  --md-accent-bg-color: #04101f;
+
+  /* typeset */
+  --md-typeset-color: var(--ti-dim);
+  --md-typeset-a-color: var(--ti-accent);
+  --md-typeset-kbd-color: var(--ti-panel2);
+  --md-typeset-kbd-accent-color: var(--ti-panel2);
+  --md-typeset-kbd-border-color: var(--ti-line);
+  --md-typeset-mark-color: var(--ti-accent-soft);
+  --md-typeset-table-color: var(--ti-line);
+  --md-typeset-table-color--light: var(--ti-line-soft);
+  --md-typeset-del-color: rgba(224, 109, 91, 0.15);
+  --md-typeset-ins-color: rgba(70, 192, 138, 0.15);
+
+  /* code */
+  --md-code-fg-color: var(--ti-dim);
+  --md-code-bg-color: var(--ti-panel);
+  --md-code-bg-color--light: var(--ti-panel);
+  --md-code-bg-color--lighter: var(--ti-panel2);
+  --md-code-hl-color: var(--ti-accent-soft);
+  --md-code-hl-color--light: var(--ti-accent-soft);
+  --md-code-hl-keyword-color: var(--ti-accent);
+  --md-code-hl-operator-color: var(--ti-dim);
+  --md-code-hl-punctuation-color: var(--ti-muted);
+  --md-code-hl-function-color: var(--ti-accent);
+  --md-code-hl-name-color: var(--ti-text);
+  --md-code-hl-constant-color: var(--ti-warn);
+  --md-code-hl-number-color: var(--ti-warn);
+  --md-code-hl-string-color: var(--ti-ok);
+  --md-code-hl-special-color: var(--ti-bad);
+  --md-code-hl-generic-color: var(--ti-bad);
+  --md-code-hl-variable-color: var(--ti-dim);
+  --md-code-hl-comment-color: var(--ti-faint);
+
+  /* admonitions */
+  --md-admonition-fg-color: var(--ti-dim);
+  --md-admonition-bg-color: var(--ti-panel);
+
+  /* footer */
+  --md-footer-bg-color: var(--ti-bg);
+  --md-footer-bg-color--dark: var(--ti-bg);
+  --md-footer-fg-color: var(--ti-dim);
+  --md-footer-fg-color--light: var(--ti-muted);
+
+  /* fonts */
+  --md-text-font: "Inter";
+  --md-text-font-family: var(--ti-font-body);
+  --md-code-font: "JetBrains Mono";
+  --md-code-font-family: var(--ti-font-mono);
+
+  --md-shadow-z1: none;
+  --md-shadow-z2: none;
+  --md-shadow-z3: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* ── 3. Base ───────────────────────────────────────────────────────────── */
+
+body {
+  background: var(--ti-bg);
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: var(--ti-status-h);
+}
+
+::selection {
+  background: var(--ti-selection);
+}
+
+html {
+  scrollbar-color: var(--ti-line) var(--ti-bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ti-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ── 4. Header ─────────────────────────────────────────────────────────── */
+
+.md-header {
+  background: var(--ti-bg);
+  color: var(--ti-text);
+  border-bottom: 1px solid var(--ti-line);
+  box-shadow: none;
+}
+
+.md-header--shadow {
+  box-shadow: none;
+}
+
+.md-header__inner {
+  min-height: 50px;
+}
+
+.md-header__title {
+  font-family: var(--ti-font-display);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.md-header__topic:first-child {
+  font-family: var(--ti-font-display);
+  font-weight: 600;
+}
+
+.md-header__button:hover {
+  opacity: 0.75;
+  transition: opacity var(--ti-fast);
+}
+
+/* breadcrumb-style secondary topic reads as mono, per crumb treatment */
+.md-header__topic + .md-header__topic {
+  font-family: var(--ti-font-mono);
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--ti-muted);
+}
+
+.md-header__source .md-source {
+  color: var(--ti-muted);
+  transition: color var(--ti-fast);
+}
+
+.md-header__source .md-source:hover {
+  color: var(--ti-text);
+}
+
+/* ── 5. Search ─────────────────────────────────────────────────────────── */
+
+.md-search__button {
+  color: var(--ti-muted);
+}
+
+.md-search__form,
+.md-search__button {
+  background: var(--ti-panel);
+  border: 1px solid var(--ti-line);
+  border-radius: 6px;
+  transition: border-color var(--ti-fast), color var(--ti-fast);
+}
+
+.md-search__form:hover,
+.md-search__button:hover {
+  border-color: var(--ti-accent);
+  color: var(--ti-dim);
+  background: var(--ti-panel);
+}
+
+.md-search__input {
+  background: transparent;
+  color: var(--ti-text);
+  font-family: var(--ti-font-body);
+  border-radius: 6px;
+}
+
+.md-search__input:focus,
+.md-search__form:focus-within {
+  border-color: var(--ti-accent);
+  outline: none;
+}
+
+.md-search__output {
+  background: var(--ti-panel);
+  border: 1px solid var(--ti-line);
+}
+
+.md-search-result__meta {
+  font-family: var(--ti-font-mono);
+  color: var(--ti-muted);
+}
+
+.md-search-result mark {
+  color: var(--ti-accent);
+  background: transparent;
+}
+
+/* ── 6. Left nav / sidebar ─────────────────────────────────────────────── */
+
+.md-sidebar__scrollwrap {
+  scrollbar-color: var(--ti-line) transparent;
+}
+
+/* top-level entries: shadcn-style 32px menu buttons (icon + label + badge),
+   not the old mono small-caps treatment — group separation now comes from
+   .ti-ico + the existing --nested border-left indent on children. */
+.md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link,
+.md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__container > .md-nav__link {
+  font-family: var(--ti-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ti-dim);
+}
+
+.md-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 6px 8px;
+  font-family: var(--ti-font-body);
+  font-size: 13px;
+  color: var(--ti-dim);
+  border-radius: 8px;
+  transition: background var(--ti-fast), color var(--ti-fast);
+}
+
+.md-nav__link:hover,
+.md-nav__link:focus {
+  background: var(--ti-panel2);
+  color: var(--ti-text);
+}
+
+.md-nav__link--active,
+.md-nav__item--active > .md-nav__link {
+  background: var(--ti-accent-soft);
+  color: var(--ti-accent) !important;
+  font-weight: 500;
+  border-radius: 8px;
+}
+
+.md-nav__item .md-nav__link--active {
+  color: var(--ti-accent);
+}
+
+.md-nav__item--nested .md-nav__list,
+.md-nav [data-md-level] .md-nav__list {
+  border-left: 1px solid var(--ti-line-soft);
+  margin-left: 0.6rem;
+}
+
+.md-nav__icon {
+  color: var(--ti-faint);
+}
+
+.md-nav__title {
+  color: var(--ti-text);
+  font-family: var(--ti-font-display);
+}
+
+.md-nav__source {
+  background: var(--ti-panel);
+  border-top: 1px solid var(--ti-line);
+}
+
+/* ── 7. Right sidebar / table of contents (toc.follow) ────────────────── */
+
+.md-nav--secondary .md-nav__link {
+  padding-left: 12px;
+  border-left: 2px solid var(--ti-line);
+  color: var(--ti-muted);
+  border-radius: 0;
+  transition: color var(--ti-fast), border-color var(--ti-fast);
+}
+
+.md-nav--secondary .md-nav__link:hover {
+  color: var(--ti-dim);
+  background: transparent;
+}
+
+.md-nav--secondary .md-nav__link--active {
+  color: var(--ti-accent) !important;
+  border-left-color: var(--ti-accent);
+  background: transparent;
+  font-weight: 400;
+}
+
+.md-nav--secondary .md-nav__title {
+  font-family: var(--ti-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ti-muted);
+}
+
+/* ── 8. Content typography ─────────────────────────────────────────────── */
+
+.md-typeset {
+  font-family: var(--ti-font-body);
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ti-dim);
+}
+
+.md-typeset h1 {
+  font-family: var(--ti-font-display);
+  font-weight: 640;
+  font-size: clamp(34px, 4.4vw, 52px);
+  line-height: 1.04;
+  letter-spacing: -0.028em;
+  color: var(--ti-text);
+  margin: 10px 0 20px;
+}
+
+.md-typeset h2 {
+  font-family: var(--ti-font-display);
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: -0.015em;
+  color: var(--ti-text);
+  margin: 44px 0 12px;
+  padding-top: 28px;
+  border-top: 1px solid var(--ti-line-soft);
+}
+
+.md-typeset h3 {
+  font-family: var(--ti-font-display);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ti-text);
+  margin: 26px 0 8px;
+}
+
+.md-typeset h4,
+.md-typeset h5,
+.md-typeset h6 {
+  font-family: var(--ti-font-display);
+  font-weight: 600;
+  color: var(--ti-text);
+}
+
+.md-typeset p {
+  color: var(--ti-dim);
+}
+
+.md-typeset strong {
+  color: var(--ti-text);
+  font-weight: 600;
+}
+
+.md-typeset a {
+  color: var(--ti-accent);
+  text-decoration: none;
+}
+
+.md-typeset a:not(.md-button):not(.headerlink) {
+  border-bottom: 1px solid var(--ti-accent-underline);
+  transition: border-color var(--ti-fast), color var(--ti-fast);
+}
+
+.md-typeset a:not(.md-button):not(.headerlink):hover {
+  border-bottom-color: var(--ti-accent);
+}
+
+.md-typeset ul,
+.md-typeset ol {
+  color: var(--ti-dim);
+}
+
+.md-typeset kbd {
+  font-family: var(--ti-font-mono);
+  font-size: 10.5px;
+  color: var(--ti-dim);
+  background: var(--ti-panel2);
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px var(--ti-line), 0 2px 0 var(--ti-line);
+}
+
+.md-typeset hr {
+  border-bottom: 1px solid var(--ti-line);
+}
+
+/* grid-cards (used on the landing page) styled as quiet panel cards */
+.md-typeset .grid.cards > ul > li {
+  background: var(--ti-panel);
+  border: 1px solid var(--ti-line);
+  border-radius: 10px;
+  transition: border-color var(--ti-fast), background var(--ti-fast);
+}
+
+.md-typeset .grid.cards > ul > li:hover {
+  border-color: var(--ti-accent);
+  background: var(--ti-panel2);
+}
+
+/* ── 9. Tables ─────────────────────────────────────────────────────────── */
+
 .md-typeset table:not([class]) {
   font-size: 0.75rem;
+  border: 1px solid var(--ti-line);
+  border-radius: 8px;
+  background: var(--ti-bg);
+  overflow: hidden;
+}
+
+.md-typeset table:not([class]) th {
+  font-family: var(--ti-font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ti-muted);
+  background: var(--ti-panel);
+  border-bottom: 1px solid var(--ti-line);
+  text-align: left;
+}
+
+.md-typeset table:not([class]) td {
+  color: var(--ti-dim);
+  border-bottom: 1px solid var(--ti-line-soft);
+}
+
+.md-typeset table:not([class]) tr:last-child td {
+  border-bottom: none;
+}
+
+.md-typeset table:not([class]) tbody tr {
+  transition: background var(--ti-fast);
+}
+
+.md-typeset table:not([class]) tbody tr:hover {
+  background: var(--ti-panel);
+}
+
+.md-typeset__scrollwrap {
+  overflow-x: auto;
+}
+
+/* ── 10. Code blocks ───────────────────────────────────────────────────── */
+
+.md-typeset code {
+  font-family: var(--ti-font-mono);
+  background: var(--ti-panel2);
+  border: 1px solid var(--ti-line-soft);
+  border-radius: 4px;
+}
+
+.md-typeset pre {
+  background: var(--ti-panel);
+}
+
+.md-typeset pre > code {
+  background: transparent;
+  border: none;
+}
+
+.md-typeset .highlight,
+.md-typeset .highlighttable {
+  background: var(--ti-panel);
+  border: 1px solid var(--ti-line);
+  border-radius: 8px;
+}
+
+.md-typeset .highlight pre,
+.md-typeset .highlighttable pre {
+  background: transparent;
+}
+
+.md-clipboard {
+  color: var(--ti-faint);
+  transition: color var(--ti-fast);
+}
+
+.md-clipboard:hover {
+  color: var(--ti-accent);
+}
+
+/* ── 11. Admonitions / callouts ────────────────────────────────────────── */
+
+.md-typeset .admonition,
+.md-typeset details {
+  background: var(--ti-panel);
+  border: 1px solid var(--ti-line);
+  border-left: 3px solid var(--ti-accent);
+  border-radius: 8px;
+  box-shadow: none;
+  color: var(--ti-dim);
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+  background: transparent;
+  font-family: var(--ti-font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ti-text);
+}
+
+.md-typeset .admonition-title::before,
+.md-typeset summary::before {
+  background-color: var(--ti-accent);
+}
+
+.md-typeset .warning,
+.md-typeset .caution {
+  border-left-color: var(--ti-warn);
+}
+
+.md-typeset .warning > .admonition-title,
+.md-typeset .caution > .admonition-title {
+  color: var(--ti-warn);
+}
+
+.md-typeset .warning > .admonition-title::before,
+.md-typeset .caution > .admonition-title::before {
+  background-color: var(--ti-warn);
+}
+
+.md-typeset .danger,
+.md-typeset .failure,
+.md-typeset .bug {
+  border-left-color: var(--ti-bad);
+}
+
+.md-typeset .danger > .admonition-title,
+.md-typeset .failure > .admonition-title,
+.md-typeset .bug > .admonition-title {
+  color: var(--ti-bad);
+}
+
+.md-typeset .danger > .admonition-title::before,
+.md-typeset .failure > .admonition-title::before,
+.md-typeset .bug > .admonition-title::before {
+  background-color: var(--ti-bad);
+}
+
+.md-typeset .success,
+.md-typeset .tip {
+  border-left-color: var(--ti-ok);
+}
+
+.md-typeset .success > .admonition-title,
+.md-typeset .tip > .admonition-title {
+  color: var(--ti-ok);
+}
+
+.md-typeset .success > .admonition-title::before,
+.md-typeset .tip > .admonition-title::before {
+  background-color: var(--ti-ok);
+}
+
+/* ── 12. Tag chips ─────────────────────────────────────────────────────── */
+
+.md-typeset .md-tag,
+.md-tag {
+  font-family: var(--ti-font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--ti-panel);
+  border: 1px solid var(--ti-line);
+  border-radius: 99px;
+  color: var(--ti-dim);
+  transition: border-color var(--ti-fast), color var(--ti-fast);
+}
+
+.md-typeset .md-tag[href]:hover,
+.md-tag[href]:hover {
+  color: var(--ti-accent);
+  border-color: var(--ti-accent);
+  background: var(--ti-accent-soft);
+}
+
+/* ── 13. Buttons / footer / source link ───────────────────────────────── */
+
+.md-typeset .md-button {
+  font-family: var(--ti-font-mono);
+  font-size: 12px;
+  color: var(--ti-dim);
+  background: var(--ti-panel);
+  border: 1px solid var(--ti-line);
+  border-radius: 6px;
+  transition: border-color var(--ti-fast), color var(--ti-fast), background var(--ti-fast);
+}
+
+.md-typeset .md-button:hover {
+  border-color: var(--ti-accent);
+  color: var(--ti-accent);
+  background: var(--ti-panel2);
+}
+
+.md-typeset .md-button--primary {
+  background: var(--ti-accent);
+  border-color: var(--ti-accent);
+  color: #04101f;
+}
+
+.md-footer {
+  background: var(--ti-bg);
+  border-top: 1px solid var(--ti-line);
+  color: var(--ti-muted);
+}
+
+.md-footer-meta {
+  background: var(--ti-bg);
+}
+
+.md-footer-meta.md-typeset a {
+  color: var(--ti-muted);
+}
+
+.md-footer-meta.md-typeset a:hover {
+  color: var(--ti-accent);
+}
+
+.md-footer__link:hover .md-ellipsis,
+.md-footer__title:hover {
+  color: var(--ti-accent);
+}
+
+/* ── 14. Statusline (JS-injected footer bar) ──────────────────────────── */
+
+footer.ti-statusline {
+  position: fixed;
+  inset: auto 0 0 0;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  background: #0b111c;
+  border-top: 1px solid var(--ti-line);
+  font-family: var(--ti-font-mono);
+  font-size: 11px;
+  color: var(--ti-muted);
+  z-index: 60;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+footer.ti-statusline .ti-mode {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 14px;
+  background: var(--ti-accent);
+  color: #04101f;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+footer.ti-statusline .ti-seg {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 100%;
+  padding: 0 14px;
+  border-right: 1px solid var(--ti-line-soft);
+}
+
+footer.ti-statusline .ti-status[data-status="reviewed"] {
+  color: var(--ti-ok);
+}
+
+footer.ti-statusline .ti-status[data-status="draft"] {
+  color: var(--ti-warn);
+}
+
+footer.ti-statusline .ti-status[data-status="stub"] {
+  color: var(--ti-bad);
+}
+
+footer.ti-statusline .ti-right {
+  margin-left: auto;
+  border-right: none;
+}
+
+body {
+  padding-bottom: var(--ti-status-h);
+}
+
+/* ── 15. Motion ────────────────────────────────────────────────────────── */
+
+@keyframes ti-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.md-content__inner {
+  animation: ti-fade-in 200ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── 15b. Task-list checkboxes ─────────────────────────────────────────── */
+
+.md-typeset .task-list-indicator::before {
+  background-color: var(--ti-faint);
+}
+
+.md-typeset [type="checkbox"]:checked + .task-list-indicator::before {
+  background-color: var(--ti-ok);
+}
+
+/* ── 16. Responsive ────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  footer.ti-statusline .ti-seg:nth-of-type(n + 3) {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .md-typeset h1 {
+    font-size: 28px;
+  }
+  .md-content__inner {
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+  }
+}
+
+/* ── 17. Sidebar enhancements (sidebar.js) ────────────────────────────────
+   shadcn-anatomy mockup: mockups/sidebar-shadcn.html. Injected into
+   .md-sidebar--primary .md-sidebar__inner (header at top, footer at
+   bottom) by docs/javascripts/sidebar.js. Reuses --ti-* tokens only. */
+
+/* Zensical renders frontmatter status as native .md-status icons in nav;
+   sidebar.js injects richer ti-dot equivalents — hide the native ones. */
+.md-nav .md-status {
+  display: none;
+}
+
+/* kill sidebar/scrollwrap top padding so nav items can't peek above the
+   sticky header */
+.md-sidebar--primary {
+  padding-top: 0;
+}
+
+.md-sidebar--primary .md-sidebar__scrollwrap {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.ti-sb-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 2px 4px 12px;
+  margin-bottom: 6px;
+  background: var(--ti-panel);
+  border-bottom: 1px solid var(--ti-line-soft);
+}
+
+.ti-sb-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 6px;
+  border-radius: 8px;
+  transition: background var(--ti-fast);
+  min-height: 36px;
+}
+
+.ti-sb-brand:hover {
+  background: var(--ti-panel2);
+}
+
+.ti-sb-mark {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--ti-accent), var(--ti-accent-dark));
+  font-family: var(--ti-font-mono);
+  font-weight: 700;
+  font-size: 11px;
+  color: #04101f;
+}
+
+.ti-sb-brand-t {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.ti-sb-brand-t b {
+  display: block;
+  font-family: var(--ti-font-display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  color: var(--ti-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ti-sb-brand-t small {
+  display: block;
+  font-family: var(--ti-font-mono);
+  font-size: 10.5px;
+  color: var(--ti-faint);
+  white-space: nowrap;
+}
+
+.ti-sb-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 8px;
+  background: var(--ti-bg);
+  border: 1px solid var(--ti-line);
+  color: var(--ti-muted);
+  font-family: var(--ti-font-body);
+  font-size: 12.5px;
+  cursor: pointer;
+  transition: border-color var(--ti-fast);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.ti-sb-search:hover,
+.ti-sb-search:focus-visible {
+  border-color: var(--ti-accent);
+  outline: none;
+}
+
+.ti-sb-search-ico {
+  flex: none;
+  display: flex;
+  color: var(--ti-muted);
+}
+
+.ti-sb-search-lbl {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ti-sb-search kbd {
+  flex: none;
+  font-family: var(--ti-font-mono);
+  font-size: 10px;
+  color: var(--ti-faint);
+  background: transparent;
+  border: 1px solid var(--ti-line);
+  border-radius: 4px;
+  padding: 1px 5px;
+  box-shadow: none;
+}
+
+/* slot holding the relocated native .md-search (sidebar.js moves the real
+   element here on desktop so trusted clicks keep opening the dialog) */
+.ti-sb-search-slot {
+  width: 100%;
+}
+
+.ti-sb-search-slot .md-search {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.ti-sb-search-slot .md-search__button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 34px;
+  /* theme draws the magnifier icon as a ::before pseudo at the left edge;
+     pad the text past it */
+  padding: 0 10px 0 34px;
+  position: relative;
+  border-radius: 8px;
+  background: var(--ti-bg);
+  border: 1px solid var(--ti-line);
+  color: var(--ti-muted);
+  font-family: var(--ti-font-body);
+  font-size: 12.5px;
+  transition: border-color var(--ti-fast);
+}
+
+.ti-sb-search-slot .md-search__button:hover,
+.ti-sb-search-slot .md-search__button:focus-visible {
+  border-color: var(--ti-accent);
+}
+
+/* icons injected in front of top-level nav labels */
+.ti-ico {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ti-muted);
+}
+
+.md-nav__link--active .ti-ico,
+.md-nav__item--active > .md-nav__link .ti-ico {
+  color: var(--ti-accent);
+}
+
+/* count badges on sections */
+.ti-badge {
+  flex: none;
+  margin-left: auto;
+  font-family: var(--ti-font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--ti-muted);
+  background: var(--ti-bg);
+  border: 1px solid var(--ti-line);
+  border-radius: 99px;
+  padding: 1px 7px;
+  cursor: help;
+}
+
+/* status dots on nav links */
+.ti-dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-left: auto;
+  border-radius: 50%;
+  cursor: help;
+}
+
+.ti-badge + .ti-dot {
+  margin-left: 6px;
+}
+
+.ti-dot[data-status="reviewed"] {
+  background: var(--ti-ok);
+}
+
+.ti-dot[data-status="draft"] {
+  background: var(--ti-warn);
+}
+
+.ti-dot[data-status="stub"] {
+  background: var(--ti-bad);
+}
+
+/* footer: repo card + coverage bar + legend */
+.ti-sb-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  margin-top: 10px;
+  padding: 10px 4px 4px;
+  background: var(--ti-panel);
+  border-top: 1px solid var(--ti-line-soft);
+}
+
+.ti-sb-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  border-radius: 8px;
+  color: var(--ti-dim);
+  transition: background var(--ti-fast);
+  white-space: nowrap;
+}
+
+.ti-sb-user:hover {
+  background: var(--ti-panel2);
+  color: var(--ti-text);
+}
+
+.ti-sb-av {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: var(--ti-panel2);
+  border: 1px solid var(--ti-line);
+  font-family: var(--ti-font-mono);
+  font-weight: 600;
+  font-size: 10px;
+  color: var(--ti-accent);
+}
+
+.ti-sb-user-t {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.ti-sb-user-t b {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ti-sb-user-t small {
+  display: block;
+  font-family: var(--ti-font-mono);
+  font-size: 10px;
+  color: var(--ti-faint);
+}
+
+.ti-sb-coverage {
+  display: flex;
+  height: 4px;
+  margin: 8px 6px 2px;
+  border-radius: 99px;
+  overflow: hidden;
+  background: var(--ti-panel2);
+  cursor: help;
+}
+
+.ti-sb-coverage i {
+  display: block;
+  height: 100%;
+}
+
+.ti-sb-coverage .ti-cov-reviewed {
+  background: var(--ti-ok);
+}
+
+.ti-sb-coverage .ti-cov-draft {
+  background: var(--ti-warn);
+}
+
+.ti-sb-coverage .ti-cov-stub {
+  background: var(--ti-bad);
+}
+
+.ti-sb-legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 4px 6px 2px;
+  font-family: var(--ti-font-mono);
+  font-size: 10px;
+  color: var(--ti-faint);
+  white-space: nowrap;
+}
+
+.ti-sb-legend span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: help;
+}
+
+.ti-sb-legend .ti-dot {
+  margin: 0;
+}
+
+/* desktop collapse toggle button, injected into the header near the title */
+.ti-sb-toggle {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--ti-muted);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background var(--ti-fast), color var(--ti-fast);
+}
+
+.ti-sb-toggle:hover {
+  background: var(--ti-panel2);
+  color: var(--ti-text);
+}
+
+/* desktop offcanvas: hide the primary sidebar and let .md-content (which is
+   flex-grow:1 inside .md-main__inner's flex row) reflow to fill the width.
+   Guarded to Zensical's own >=76.25em breakpoint so the native mobile
+   drawer (#__drawer) is never affected. */
+@media (min-width: 76.25em) {
+  body.ti-sb-collapsed .md-sidebar--primary {
+    display: none;
+  }
+}
+
+/* below the drawer breakpoint, make sure our injected header/footer look
+   right inside Zensical's own mobile drawer sheet */
+@media (max-width: 76.1875em) {
+  .ti-sb-toggle {
+    display: none;
+  }
+  .ti-sb-header,
+  .ti-sb-footer {
+    position: static;
+  }
 }

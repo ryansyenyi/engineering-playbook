@@ -39,7 +39,12 @@ site_url  = "https://ryansyenyi.github.io/engineering-playbook/"
 repo_url  = "https://github.com/ryansyenyi/engineering-playbook"
 repo_name = "ryansyenyi/engineering-playbook"
 edit_uri  = "edit/main/docs/"
-extra_css = ["stylesheets/extra.css"]
+extra_css = ["stylesheets/fonts.css", "stylesheets/extra.css"]
+extra_javascript = [
+  "javascripts/nav-data.js",
+  "javascripts/sidebar.js",
+  "javascripts/statusline.js",
+]
 watch     = ["data", "tools"]
 
 nav = [
@@ -129,15 +134,9 @@ features = [
   "content.action.edit",
 ]
 
+# Dark-only "Terminal Ink" theme: single slate scheme, no toggle.
 [[project.theme.palette]]
-media = "(prefers-color-scheme: light)"
-scheme = "default"
-toggle = { icon = "lucide/sun", name = "Switch to dark mode" }
-
-[[project.theme.palette]]
-media = "(prefers-color-scheme: dark)"
 scheme = "slate"
-toggle = { icon = "lucide/moon", name = "Switch to light mode" }
 
 [project.plugins.search]
 [project.plugins.tags]
@@ -150,6 +149,7 @@ invalid_link_anchors = true
 [project.markdown_extensions]
 attr_list = {}
 md_in_html = {}
+pymdownx.tasklist = { custom_checkbox = true }
 pymdownx.superfences.custom_fences = [
   { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
 ]
