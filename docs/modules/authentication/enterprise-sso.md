@@ -128,17 +128,25 @@ customer is allowed to enable it.
 
 ## Implementation examples
 
-- **Assertion validation order**: per the SAML 2.0 core specification, a
-  relying party that receives a signed assertion "MUST verify that the
-  signature is valid in accordance with [XMLSig]" — do this before reading
-  any value out of the assertion, not after, and reject the entire
-  response if validation fails.
+- **Assertion validation order**: SAML 2.0 core §2.3.3 states, "If such a
+  signature is used, then the `<ds:Signature>` element MUST be present,
+  and a relying party MUST verify that the signature is valid (that is,
+  that the assertion has not been tampered with) in accordance with
+  [XMLSig]," and, "If it is invalid, then the relying party MUST NOT rely
+  on the contents of the assertion." Do this before reading any value out
+  of the assertion, not after, and reject the entire response if
+  validation fails.
 - **Audience and time-window checks**: validate the `AudienceRestriction`
   element matches your service provider's own entity ID, and that the
-  current time falls within the assertion's `NotBefore` /
-  `NotOnOrAfter` window, per SAML 2.0 core's `Conditions` element — an
-  assertion issued for a different SP, or replayed outside its validity
-  window, must be rejected regardless of a valid signature.
+  current time falls within the assertion's validity window. SAML 2.0
+  core §2.5.1.2 defines that window — "The NotBefore attribute specifies
+  the time instant at which the validity interval begins. The
+  NotOnOrAfter attribute specifies the time instant at which the validity
+  interval has ended" — and §2.5.1.4 defines the audience check: "The
+  audience restriction condition evaluates to Valid if and only if the
+  SAML relying party is a member of one or more of the audiences
+  specified." An assertion issued for a different SP, or replayed outside
+  its validity window, must be rejected regardless of a valid signature.
 - **Single-assertion enforcement**: per the
   [OWASP SAML Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SAML_Security_Cheat_Sheet.html)
   guidance on signature wrapping, reject any SAML response containing more
@@ -164,25 +172,31 @@ example, the first `Assertion` it finds, rather than the one the signature
 actually covers. This happens when signature verification and assertion
 processing are handled as separate steps against separate parses of the
 same XML, letting an attacker change a role from guest to administrator
-while the signature still "verifies." SAML 2.0 core's requirement that the
-relying party "verify that the signature is valid" means verifying it
-against the specific element being trusted: check that the signature's
-Reference URI matches the ID of the assertion your code reads, reject
-documents with more than one assertion, and use a single hardened XML
-parser with DTDs disabled for the whole pipeline.
+while the signature still "verifies" in the narrow sense SAML 2.0 core
+§2.3.3 requires — the section mandates that the relying party "MUST
+verify that the signature is valid" and, if not, "MUST NOT rely on the
+contents of the assertion," but says nothing about which assertion
+element in a multi-assertion document that verification result should be
+trusted for. That binding is exactly what the
+[OWASP SAML Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SAML_Security_Cheat_Sheet.html)
+closes: check that the signature's Reference URI matches the ID of the
+assertion your code reads, reject documents with more than one assertion,
+and use a single hardened XML parser with DTDs disabled for the whole
+pipeline.
 
 ### Skipping `AudienceRestriction` or `NotOnOrAfter` validation
 
 A signature proves the assertion was issued by the expected IdP; it says
 nothing about who the assertion was issued for or how long it remains
-valid. SAML 2.0 core defines `Conditions` — including
-`AudienceRestriction` and the `NotBefore`/`NotOnOrAfter` window — precisely
-so a service provider can reject an assertion that is validly signed but
-was issued for a different application, or has already expired. Skipping
-either check accepts an assertion your application was never the intended
-recipient of, or replays one long after it should have stopped being
-trusted. Validate every `Conditions` child element, not only the
-signature.
+valid. SAML 2.0 core §2.5.1 defines `Conditions`, with §2.5.1.2 governing
+the `NotBefore`/`NotOnOrAfter` validity window and §2.5.1.4 governing
+`AudienceRestriction` (quoted above in Implementation examples) —
+precisely so a service provider can reject an assertion that is validly
+signed but was issued for a different application, or has already
+expired. Skipping either check accepts an assertion your application was
+never the intended recipient of, or replays one long after it should have
+stopped being trusted. Validate every `Conditions` child element, not
+only the signature.
 
 ### Treating SSO configuration as a one-time integration per identity provider
 

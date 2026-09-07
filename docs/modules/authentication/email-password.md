@@ -183,16 +183,12 @@ password-change time, not only at login.
 
 ## Real-world implementations
 
-- **GitHub** documents [personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
-  as "an alternative to using passwords for authentication" for the API and
-  command line, treating a long-lived password as something to route
-  around for programmatic access rather than something to strengthen
-  further.
 - **Have I Been Pwned**'s Pwned Passwords service is consumed directly by
   password managers and identity platforms as a drop-in registration-time
   check, exactly as described in Implementation examples above, without
   those consumers ever transmitting a user's actual password to a third
-  party.
+  party — the k-anonymity range query described there is the API's own
+  documented integration pattern, not a hypothetical one.
 
 ## References
 

@@ -37,12 +37,12 @@ mechanisms in this module typically combine.
 ### When not to use
 
 - The provider's account model does not match your trust requirements.
-  RFC 6749 defines OAuth 2.0 as "an authorization framework" for a client
-  to obtain access to a resource "on behalf of the resource owner" — it
-  does not define an identity or login ceremony at all. RFC 6819 goes
-  further and warns that "clients should use an appropriate protocol,
-  such as OpenID or SAML to implement user login" rather than bare OAuth
-  — see Common mistakes below.
+  RFC 6749's abstract describes OAuth 2.0 as enabling "a third-party
+  application to obtain limited access to an HTTP service ... on behalf
+  of a resource owner" — it does not define an identity or login
+  ceremony at all. RFC 6819 goes further and warns that "clients should
+  use an appropriate protocol, such as OpenID or SAML to implement user
+  login" rather than bare OAuth — see Common mistakes below.
 - The audience is an enterprise buyer with its own identity provider.
   [Enterprise SSO](enterprise-sso.md) integrates with their directory
   directly; social login authenticates against a personal, not
@@ -162,10 +162,12 @@ a confirmation step for any address the provider has not itself verified.
 
 ### Using bare OAuth 2.0 as if it were a login protocol
 
-RFC 6749 defines OAuth 2.0 to let "a client to obtain access to a
-resource" — nothing in that scope is a signed statement of identity. RFC
-6819 is explicit about the consequence: "Clients should use an
-appropriate protocol, such as OpenID or SAML to implement user login."
+RFC 6749's abstract scopes OAuth 2.0 to letting "a third-party
+application to obtain limited access to an HTTP service ... on behalf of
+a resource owner" — nothing in that scope is a signed statement of
+identity. RFC 6819 is explicit about the consequence: "Clients should
+use an appropriate protocol, such as OpenID or SAML to implement user
+login."
 An application that treats "I obtained an access token that can read this
 provider's `/me` endpoint" as equivalent to "I have proven who this user
 is" is relying on a guarantee the protocol never made, and inherits the
