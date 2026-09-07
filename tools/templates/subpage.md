@@ -2,7 +2,7 @@
 title: {{TITLE}}
 module: {{MODULE}}
 status: stub
-tags: []
+tags: [{{MODULE}}]
 sources: []
 ---
 

@@ -2,7 +2,7 @@
 title: {{TITLE}}
 module: {{MODULE}}
 status: stub
-tags: [Decision matrix]
+tags: [Decision matrix, {{MODULE}}]
 sources: []
 ---
 

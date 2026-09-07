@@ -2,7 +2,7 @@
 title: {{TITLE}}
 module: {{MODULE}}
 status: stub
-tags: [ADR]
+tags: [ADR, {{MODULE}}]
 sources: []
 ---
 

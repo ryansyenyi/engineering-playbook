@@ -2,7 +2,7 @@
 title: {{TITLE}}
 module: {{MODULE}}
 status: stub
-tags: [Checklist]
+tags: [Checklist, {{MODULE}}]
 sources: []
 ---
 
